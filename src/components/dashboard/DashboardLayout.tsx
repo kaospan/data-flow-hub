@@ -9,7 +9,7 @@ export function DashboardLayout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar - desktop */}
-      <div className="hidden md:block">
+      <div className="hidden md:block fixed top-0 start-0 h-screen w-64 z-40">
         <DashboardSidebar />
       </div>
 
