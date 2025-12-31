@@ -41,11 +41,15 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
     return location.pathname.startsWith(path);
   };
 
+  const handleNavClick = () => {
+    if (onClose) onClose();
+  };
+
   return (
-    <aside className="fixed top-0 start-0 h-screen w-64 bg-sidebar border-e border-sidebar-border flex flex-col z-40">
+    <aside className="h-screen w-64 bg-sidebar border-e border-sidebar-border flex flex-col">
       {/* Logo + Close button */}
       <div className="p-6 border-b border-sidebar-border flex items-center justify-between">
-        <Link to="/dashboard" className="flex items-center gap-2">
+        <Link to="/dashboard" className="flex items-center gap-2" onClick={handleNavClick}>
           <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
             <Zap className="w-6 h-6 text-primary-foreground" />
           </div>
@@ -54,7 +58,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors"
+            className="p-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />
@@ -68,6 +72,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
           <Link
             key={item.path}
             to={item.path}
+            onClick={handleNavClick}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               isActive(item.path)
                 ? 'bg-sidebar-accent text-sidebar-accent-foreground'
