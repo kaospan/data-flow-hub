@@ -23,11 +23,11 @@ export function DashboardLayout() {
 
       {/* Mobile sidebar */}
       <div
-        className={`fixed inset-y-0 start-0 z-40 transform transition-transform duration-300 md:hidden ${
+        className={`fixed inset-y-0 start-0 z-40 transform transition-transform duration-300 ease-out md:hidden ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'
         }`}
       >
-        <DashboardSidebar />
+        <DashboardSidebar onClose={() => setIsMobileMenuOpen(false)} />
       </div>
 
       {/* Main content */}

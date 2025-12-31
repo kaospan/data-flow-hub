@@ -9,6 +9,7 @@ import {
   HelpCircle,
   LogOut,
   Globe,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +26,11 @@ const navItems = [
   { icon: Settings, labelKey: 'settings.title', path: '/dashboard/settings' },
 ];
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  onClose?: () => void;
+}
+
+export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const { t, language, setLanguage } = useLanguage();
   const location = useLocation();
 
@@ -38,14 +43,23 @@ export function DashboardSidebar() {
 
   return (
     <aside className="fixed top-0 start-0 h-screen w-64 bg-sidebar border-e border-sidebar-border flex flex-col z-40">
-      {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
+      {/* Logo + Close button */}
+      <div className="p-6 border-b border-sidebar-border flex items-center justify-between">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
             <Zap className="w-6 h-6 text-primary-foreground" />
           </div>
           <span className="text-xl font-bold gradient-text">DataFlow</span>
         </Link>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="md:hidden p-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
