@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { usePermissions } from '@/hooks/usePermissions';
 import {
   Zap,
   LayoutDashboard,
@@ -13,6 +13,8 @@ import {
   Globe,
   X,
   Users,
+  CreditCard,
+  Building2,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -20,23 +22,58 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { Database as DbTypes } from '@/integrations/supabase/types';
-
-type AppRole = DbTypes['public']['Enums']['app_role'];
 
 interface NavItem {
   icon: typeof LayoutDashboard;
   labelKey: string;
   path: string;
-  roles?: AppRole[]; // If undefined, visible to all roles
+  permission?: string;
 }
 
+// Define all navigation items with their required permissions
 const navItems: NavItem[] = [
-  { icon: LayoutDashboard, labelKey: 'dashboard.title', path: '/dashboard' },
-  { icon: Database, labelKey: 'sources.title', path: '/dashboard/sources' },
-  { icon: Workflow, labelKey: 'automations.title', path: '/dashboard/automations', roles: ['admin', 'editor'] },
-  { icon: Users, labelKey: 'settings.team', path: '/dashboard/team', roles: ['admin'] },
-  { icon: Settings, labelKey: 'settings.title', path: '/dashboard/settings' },
+  { 
+    icon: LayoutDashboard, 
+    labelKey: 'dashboard.title', 
+    path: '/dashboard',
+    permission: 'view:dashboard',
+  },
+  { 
+    icon: Database, 
+    labelKey: 'sources.title', 
+    path: '/dashboard/sources',
+    permission: 'view:sources',
+  },
+  { 
+    icon: Workflow, 
+    labelKey: 'automations.title', 
+    path: '/dashboard/automations',
+    permission: 'view:automations',
+  },
+  { 
+    icon: Users, 
+    labelKey: 'settings.team', 
+    path: '/dashboard/team',
+    permission: 'view:team',
+  },
+  { 
+    icon: CreditCard, 
+    labelKey: 'settings.billing', 
+    path: '/dashboard/billing',
+    permission: 'view:billing',
+  },
+  { 
+    icon: Building2, 
+    labelKey: 'settings.workspace', 
+    path: '/dashboard/organization',
+    permission: 'view:organization',
+  },
+  { 
+    icon: Settings, 
+    labelKey: 'settings.title', 
+    path: '/dashboard/settings',
+    permission: 'view:settings',
+  },
 ];
 
 interface DashboardSidebarProps {
@@ -45,7 +82,8 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const { t, language, setLanguage } = useLanguage();
-  const { role } = useAuth();
+  const { signOut } = useAuth();
+  const { hasPermission, isLoading } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -61,15 +99,15 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     navigate('/');
   };
 
-  // Filter nav items based on user role
+  // Filter nav items based on user permissions - don't render forbidden items at all
   const visibleNavItems = navItems.filter(item => {
-    if (!item.roles) return true; // Visible to all if no roles specified
-    if (!role) return false; // Hide role-restricted items if no role
-    return item.roles.includes(role);
+    if (isLoading) return false; // Don't show anything while loading
+    if (!item.permission) return true; // Show if no permission required
+    return hasPermission(item.permission);
   });
 
   return (
@@ -94,7 +132,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {visibleNavItems.map((item) => (
           <Link
             key={item.path}
@@ -129,6 +167,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
         <Link
           to="/help"
+          onClick={handleNavClick}
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
         >
           <HelpCircle className="w-5 h-5" />

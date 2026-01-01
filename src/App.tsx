@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Sources from "./pages/Sources";
 import Automations from "./pages/Automations";
 import Settings from "./pages/Settings";
+import Team from "./pages/Team";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="sources" element={<Sources />} />
               <Route path="automations" element={<Automations />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="team" element={<Team />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
