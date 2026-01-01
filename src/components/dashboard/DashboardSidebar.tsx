@@ -1,5 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Zap,
   LayoutDashboard,
@@ -10,19 +12,30 @@ import {
   LogOut,
   Globe,
   X,
+  Users,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { Database as DbTypes } from '@/integrations/supabase/types';
 
-const navItems = [
+type AppRole = DbTypes['public']['Enums']['app_role'];
+
+interface NavItem {
+  icon: typeof LayoutDashboard;
+  labelKey: string;
+  path: string;
+  roles?: AppRole[]; // If undefined, visible to all roles
+}
+
+const navItems: NavItem[] = [
   { icon: LayoutDashboard, labelKey: 'dashboard.title', path: '/dashboard' },
   { icon: Database, labelKey: 'sources.title', path: '/dashboard/sources' },
-  { icon: Workflow, labelKey: 'automations.title', path: '/dashboard/automations' },
+  { icon: Workflow, labelKey: 'automations.title', path: '/dashboard/automations', roles: ['admin', 'editor'] },
+  { icon: Users, labelKey: 'settings.team', path: '/dashboard/team', roles: ['admin'] },
   { icon: Settings, labelKey: 'settings.title', path: '/dashboard/settings' },
 ];
 
@@ -32,7 +45,9 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const { t, language, setLanguage } = useLanguage();
+  const { role } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => {
     if (path === '/dashboard') {
@@ -44,6 +59,18 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const handleNavClick = () => {
     if (onClose) onClose();
   };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  // Filter nav items based on user role
+  const visibleNavItems = navItems.filter(item => {
+    if (!item.roles) return true; // Visible to all if no roles specified
+    if (!role) return false; // Hide role-restricted items if no role
+    return item.roles.includes(role);
+  });
 
   return (
     <aside className="h-screen w-64 bg-sidebar border-e border-sidebar-border flex flex-col">
@@ -68,7 +95,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        {navItems.map((item) => (
+        {visibleNavItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
@@ -108,13 +135,13 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
           <span className="font-medium">{language === 'he' ? 'עזרה' : 'Help'}</span>
         </Link>
 
-        <Link
-          to="/"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">{t('nav.logout')}</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );
