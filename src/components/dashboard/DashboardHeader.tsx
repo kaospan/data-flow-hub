@@ -1,10 +1,10 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/hooks/useAuth';
+import { getRoleLabel } from '@/hooks/usePermissions';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Bell, Search, Menu, X } from 'lucide-react';
+import { Bell, Search, Menu, X, Building2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -12,8 +12,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DashboardHeaderProps {
   onMenuToggle?: () => void;
@@ -22,7 +24,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ onMenuToggle, isMenuOpen }: DashboardHeaderProps) {
   const { t, language } = useLanguage();
-  const { profile, role, isLoading } = useAuth();
+  const { profile, organization, role, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
 
   const getInitials = () => {
@@ -46,27 +48,17 @@ export function DashboardHeader({ onMenuToggle, isMenuOpen }: DashboardHeaderPro
     return language === 'he' ? 'משתמש' : 'User';
   };
 
-  const getRoleBadge = () => {
-    if (!role) return null;
-    const labels = {
-      admin: language === 'he' ? 'מנהל' : 'Admin',
-      editor: language === 'he' ? 'עורך' : 'Editor',
-      viewer: language === 'he' ? 'צופה' : 'Viewer',
-    };
-    const variants = {
-      admin: 'default',
-      editor: 'secondary',
-      viewer: 'outline',
-    } as const;
-    return (
-      <Badge variant={variants[role]} className="text-xs">
-        {labels[role]}
-      </Badge>
-    );
+  const getRoleBadgeVariant = () => {
+    switch (role) {
+      case 'admin': return 'default';
+      case 'editor': return 'secondary';
+      case 'viewer': return 'outline';
+      default: return 'outline';
+    }
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     navigate('/');
   };
 
@@ -93,6 +85,14 @@ export function DashboardHeader({ onMenuToggle, isMenuOpen }: DashboardHeaderPro
 
       {/* Actions */}
       <div className="flex items-center gap-2">
+        {/* Organization indicator */}
+        {organization && (
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/50 me-2">
+            <Building2 className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">{organization.name}</span>
+          </div>
+        )}
+
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
           <span className="absolute top-1 end-1 w-2 h-2 bg-primary rounded-full" />
@@ -101,18 +101,43 @@ export function DashboardHeader({ onMenuToggle, isMenuOpen }: DashboardHeaderPro
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="gap-2 px-2">
-              <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-primary/20 text-primary text-sm">
-                  {isLoading ? '...' : getInitials()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden md:flex flex-col items-start">
-                <span className="text-sm font-medium">{getDisplayName()}</span>
-                {getRoleBadge()}
-              </div>
+              {isLoading ? (
+                <>
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <Skeleton className="hidden md:block w-24 h-4" />
+                </>
+              ) : (
+                <>
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-primary/20 text-primary text-sm">
+                      {getInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden md:flex flex-col items-start">
+                    <span className="text-sm font-medium">{getDisplayName()}</span>
+                    {role && (
+                      <Badge variant={getRoleBadgeVariant()} className="text-xs h-5">
+                        {getRoleLabel(role, language)}
+                      </Badge>
+                    )}
+                  </div>
+                </>
+              )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium">{getDisplayName()}</p>
+                <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                {role && (
+                  <Badge variant={getRoleBadgeVariant()} className="w-fit text-xs mt-1">
+                    {getRoleLabel(role, language)}
+                  </Badge>
+                )}
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
               {t('settings.profile')}
             </DropdownMenuItem>

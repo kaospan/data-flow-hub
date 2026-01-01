@@ -1,6 +1,10 @@
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/hooks/useAuth';
+import { usePermissions } from '@/hooks/usePermissions';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { EditorOrAbove } from '@/components/auth/RoleGuard';
 import {
   Database,
   Workflow,
@@ -21,20 +25,16 @@ const stats = [
 ];
 
 const recentActivity = [
-  { type: 'upload', name: 'sales_report.xlsx', time: '5 דקות', status: 'success' },
-  { type: 'automation', name: 'Daily Export', time: '1 שעה', status: 'success' },
-  { type: 'ocr', name: 'invoice_scan.pdf', time: '2 שעות', status: 'processing' },
-  { type: 'upload', name: 'customer_list.csv', time: '3 שעות', status: 'success' },
-];
-
-const quickActions = [
-  { icon: FileSpreadsheet, label: 'העלה קובץ', path: '/dashboard/sources' },
-  { icon: Image, label: 'סרוק תמונה', path: '/dashboard/sources' },
-  { icon: Zap, label: 'אוטומציה חדשה', path: '/dashboard/automations' },
+  { type: 'upload', name: 'sales_report.xlsx', time: '5 דקות', timeEn: '5 min', status: 'success' },
+  { type: 'automation', name: 'Daily Export', time: '1 שעה', timeEn: '1 hour', status: 'success' },
+  { type: 'ocr', name: 'invoice_scan.pdf', time: '2 שעות', timeEn: '2 hours', status: 'processing' },
+  { type: 'upload', name: 'customer_list.csv', time: '3 שעות', timeEn: '3 hours', status: 'success' },
 ];
 
 const Dashboard = () => {
   const { t, language } = useLanguage();
+  const { profile, isLoading } = useAuth();
+  const { canEdit } = usePermissions();
 
   const activityLabels = {
     he: { upload: 'העלאה', automation: 'אוטומציה', ocr: 'סריקה' },
@@ -46,13 +46,54 @@ const Dashboard = () => {
     en: { success: 'Complete', processing: 'Processing', error: 'Error' },
   };
 
+  // Get user's display name
+  const displayName = profile?.name 
+    ? profile.name.split(' ')[0] 
+    : profile?.email?.split('@')[0] 
+    || (language === 'he' ? 'משתמש' : 'User');
+
+  // Quick actions based on permissions
+  const quickActions = [
+    { 
+      icon: FileSpreadsheet, 
+      label: language === 'he' ? 'העלה קובץ' : 'Upload File', 
+      path: '/dashboard/sources',
+      show: true,
+    },
+    { 
+      icon: Image, 
+      label: language === 'he' ? 'סרוק תמונה' : 'Scan Image', 
+      path: '/dashboard/sources',
+      show: true,
+    },
+    { 
+      icon: Zap, 
+      label: language === 'he' ? 'אוטומציה חדשה' : 'New Automation', 
+      path: '/dashboard/automations',
+      show: canEdit('automations'),
+    },
+  ].filter(action => action.show);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <Skeleton className="h-12 w-64" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map(i => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">
-            {t('dashboard.welcome')}, {language === 'he' ? 'ישראל' : 'Israel'} 👋
+            {t('dashboard.welcome')}, {displayName} 👋
           </h1>
           <p className="text-muted-foreground mt-1">
             {language === 'he' ? 'הנה סיכום הפעילות שלך' : "Here's your activity summary"}
@@ -65,12 +106,14 @@ const Dashboard = () => {
               {t('dashboard.addSource')}
             </Button>
           </Link>
-          <Link to="/dashboard/automations">
-            <Button variant="hero">
-              <Zap className="w-4 h-4 me-2" />
-              {t('dashboard.newAutomation')}
-            </Button>
-          </Link>
+          <EditorOrAbove>
+            <Link to="/dashboard/automations">
+              <Button variant="hero">
+                <Zap className="w-4 h-4 me-2" />
+                {t('dashboard.newAutomation')}
+              </Button>
+            </Link>
+          </EditorOrAbove>
         </div>
       </div>
 
@@ -134,7 +177,7 @@ const Dashboard = () => {
                   <div>
                     <p className="text-sm font-medium">{activity.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {activityLabels[language][activity.type as keyof typeof activityLabels.he]} • {language === 'he' ? `לפני ${activity.time}` : `${activity.time} ago`}
+                      {activityLabels[language][activity.type as keyof typeof activityLabels.he]} • {language === 'he' ? `לפני ${activity.time}` : `${activity.timeEn} ago`}
                     </p>
                   </div>
                 </div>

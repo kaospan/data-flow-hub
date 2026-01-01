@@ -73,10 +73,14 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.title': 'הגדרות',
     'settings.profile': 'פרופיל',
     'settings.workspace': 'סביבת עבודה',
-    'settings.billing': 'חיוב',
-    'settings.team': 'צוות',
+    'settings.billing': 'חיוב ותשלום',
+    'settings.team': 'ניהול צוות',
     'settings.language': 'שפה',
     'settings.notifications': 'התראות',
+    
+    // Access
+    'access.denied': 'אין הרשאה',
+    'access.deniedMessage': 'אין לך הרשאה לצפייה בדף זה',
     
     // Plans
     'plans.starter': 'התחלתי',
@@ -176,9 +180,13 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.profile': 'Profile',
     'settings.workspace': 'Workspace',
     'settings.billing': 'Billing',
-    'settings.team': 'Team',
+    'settings.team': 'Team Management',
     'settings.language': 'Language',
     'settings.notifications': 'Notifications',
+    
+    // Access
+    'access.denied': 'Access Denied',
+    'access.deniedMessage': 'You do not have permission to view this page',
     
     // Plans
     'plans.starter': 'Starter',
