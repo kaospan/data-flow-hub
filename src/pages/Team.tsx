@@ -1,10 +1,14 @@
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/hooks/useAuth';
 import { usePermissions } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getRoleLabel } from '@/hooks/usePermissions';
 import { AdminOnly, CanEdit } from '@/components/auth/RoleGuard';
 import { AccessDenied } from '@/components/auth/AccessDenied';
@@ -23,23 +27,82 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-// Mock team data - in production this would come from the database
-const teamMembers = [
-  { id: '1', name: 'Israel Israeli', email: 'israel@example.com', role: 'admin' as const },
-  { id: '2', name: 'David Cohen', email: 'david@example.com', role: 'editor' as const },
-  { id: '3', name: 'Sarah Levi', email: 'sarah@example.com', role: 'viewer' as const },
-];
+type AppRole = Database['public']['Enums']['app_role'];
+
+interface TeamMember {
+  id: string;
+  name: string | null;
+  email: string;
+  role: AppRole;
+}
 
 const TeamPage = () => {
   const { language } = useLanguage();
   const { canView } = usePermissions();
+  const { profile } = useAuth();
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      if (!profile?.organization_id) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch profiles in the same organization
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, name, email')
+          .eq('organization_id', profile.organization_id);
+
+        if (profilesError) {
+          console.error('Error fetching profiles:', profilesError);
+          setIsLoading(false);
+          return;
+        }
+
+        // Fetch roles for all team members
+        const userIds = profiles.map(p => p.id);
+        const { data: roles, error: rolesError } = await supabase
+          .from('user_roles')
+          .select('user_id, role')
+          .in('user_id', userIds);
+
+        if (rolesError) {
+          console.error('Error fetching roles:', rolesError);
+        }
+
+        // Combine profiles with roles
+        const members: TeamMember[] = profiles.map(p => {
+          const userRole = roles?.find(r => r.user_id === p.id);
+          return {
+            id: p.id,
+            name: p.name,
+            email: p.email,
+            role: userRole?.role || 'viewer',
+          };
+        });
+
+        setTeamMembers(members);
+      } catch (error) {
+        console.error('Error fetching team:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTeamMembers();
+  }, [profile?.organization_id]);
 
   // Check permission - show access denied if not allowed
   if (!canView('team')) {
     return <AccessDenied />;
   }
 
-  const getInitials = (name: string) => {
+  const getInitials = (name: string | null) => {
+    if (!name) return '?';
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
@@ -91,51 +154,71 @@ const TeamPage = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {teamMembers.map(member => (
-              <div 
-                key={member.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-secondary/30"
-              >
-                <div className="flex items-center gap-4">
-                  <Avatar className="w-10 h-10">
-                    <AvatarFallback className="bg-primary/20 text-primary">
-                      {getInitials(member.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{member.name}</p>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Mail className="w-3 h-3" />
-                      {member.email}
-                    </p>
+            {isLoading ? (
+              // Loading skeletons
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-4 rounded-lg bg-secondary/30">
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <div>
+                      <Skeleton className="h-4 w-32 mb-2" />
+                      <Skeleton className="h-3 w-48" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              ))
+            ) : teamMembers.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">
+                {language === 'he' ? 'לא נמצאו חברי צוות' : 'No team members found'}
+              </p>
+            ) : (
+              teamMembers.map(member => (
+                <div 
+                  key={member.id}
+                  className="flex items-center justify-between p-4 rounded-lg bg-secondary/30"
+                >
+                  <div className="flex items-center gap-4">
+                    <Avatar className="w-10 h-10">
+                      <AvatarFallback className="bg-primary/20 text-primary">
+                        {getInitials(member.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{member.name || member.email}</p>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Mail className="w-3 h-3" />
+                        {member.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={getRoleBadgeVariant(member.role)} className="gap-1">
+                      <Shield className="w-3 h-3" />
+                      {getRoleLabel(member.role, language)}
+                    </Badge>
+                    <CanEdit resource="team">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            {language === 'he' ? 'שנה תפקיד' : 'Change Role'}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive">
+                            <Trash2 className="w-4 h-4 me-2" />
+                            {language === 'he' ? 'הסר מהצוות' : 'Remove from Team'}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </CanEdit>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant={getRoleBadgeVariant(member.role)} className="gap-1">
-                    <Shield className="w-3 h-3" />
-                    {getRoleLabel(member.role, language)}
-                  </Badge>
-                  <CanEdit resource="team">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          {language === 'he' ? 'שנה תפקיד' : 'Change Role'}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                          <Trash2 className="w-4 h-4 me-2" />
-                          {language === 'he' ? 'הסר מהצוות' : 'Remove from Team'}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CanEdit>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
