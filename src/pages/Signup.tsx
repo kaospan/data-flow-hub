@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Zap, ArrowLeft, ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Signup = () => {
   const { t, language } = useLanguage();
@@ -30,15 +31,45 @@ const Signup = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate signup - in production this would connect to auth
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: language === 'he' ? 'החשבון נוצר בהצלחה!' : 'Account created successfully!',
-        description: language === 'he' ? 'ברוכים הבאים ל-DataFlow' : 'Welcome to DataFlow',
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            name: formData.fullName,
+            organization_name: formData.companyName,
+          },
+        },
       });
-      navigate('/dashboard');
-    }, 1000);
+
+      if (error) {
+        toast({
+          title: language === 'he' ? 'שגיאה' : 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (data.user) {
+        toast({
+          title: language === 'he' ? 'החשבון נוצר בהצלחה!' : 'Account created successfully!',
+          description: language === 'he' ? 'ברוכים הבאים ל-DataFlow' : 'Welcome to DataFlow',
+        });
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      toast({
+        title: language === 'he' ? 'שגיאה' : 'Error',
+        description: language === 'he' ? 'אירעה שגיאה' : 'An error occurred',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const benefits = language === 'he'
