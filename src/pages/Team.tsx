@@ -19,7 +19,9 @@ import {
   MoreVertical,
   UserPlus,
   Trash2,
+  UserCog,
 } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,12 +38,62 @@ interface TeamMember {
   role: AppRole;
 }
 
+const AVAILABLE_ROLES: AppRole[] = ['admin', 'editor', 'viewer'];
+
 const TeamPage = () => {
   const { language } = useLanguage();
   const { canView } = usePermissions();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+
+  const handleRoleChange = async (memberId: string, newRole: AppRole) => {
+    // Prevent changing own role
+    if (memberId === user?.id) {
+      toast({
+        title: language === 'he' ? 'שגיאה' : 'Error',
+        description: language === 'he' 
+          ? 'לא ניתן לשנות את התפקיד שלך'
+          : 'You cannot change your own role',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setUpdatingRole(memberId);
+    try {
+      const { error } = await supabase
+        .from('user_roles')
+        .update({ role: newRole })
+        .eq('user_id', memberId);
+
+      if (error) throw error;
+
+      // Update local state
+      setTeamMembers(prev => 
+        prev.map(m => m.id === memberId ? { ...m, role: newRole } : m)
+      );
+
+      toast({
+        title: language === 'he' ? 'התפקיד עודכן' : 'Role Updated',
+        description: language === 'he'
+          ? 'התפקיד עודכן בהצלחה'
+          : 'Team member role has been updated',
+      });
+    } catch (error) {
+      console.error('Error updating role:', error);
+      toast({
+        title: language === 'he' ? 'שגיאה' : 'Error',
+        description: language === 'he'
+          ? 'לא ניתן לעדכן את התפקיד'
+          : 'Failed to update role',
+        variant: 'destructive',
+      });
+    } finally {
+      setUpdatingRole(null);
+    }
+  };
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -205,10 +257,22 @@ const TeamPage = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            {language === 'he' ? 'שנה תפקיד' : 'Change Role'}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
+                          {AVAILABLE_ROLES.map(role => (
+                            <DropdownMenuItem
+                              key={role}
+                              disabled={member.role === role || member.id === user?.id || updatingRole === member.id}
+                              onClick={() => handleRoleChange(member.id, role)}
+                            >
+                              <UserCog className="w-4 h-4 me-2" />
+                              {language === 'he' ? 'שנה ל' : 'Set as '}{getRoleLabel(role, language)}
+                              {member.role === role && (
+                                <Badge variant="outline" className="ms-2 text-xs">
+                                  {language === 'he' ? 'נוכחי' : 'Current'}
+                                </Badge>
+                              )}
+                            </DropdownMenuItem>
+                          ))}
+                          <DropdownMenuItem className="text-destructive" disabled={member.id === user?.id}>
                             <Trash2 className="w-4 h-4 me-2" />
                             {language === 'he' ? 'הסר מהצוות' : 'Remove from Team'}
                           </DropdownMenuItem>
