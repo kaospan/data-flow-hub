@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -6,11 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Zap, ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const Arrow = language === 'he' ? ArrowLeft : ArrowRight;
 
   const [email, setEmail] = useState('');
@@ -18,19 +21,49 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [authLoading, isAuthenticated, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login - in production this would connect to auth
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: language === 'he' ? 'התחברות הצליחה!' : 'Login successful!',
-        description: language === 'he' ? 'מעביר אותך ללוח הבקרה...' : 'Redirecting to dashboard...',
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-      navigate('/dashboard');
-    }, 1000);
+
+      if (error) {
+        toast({
+          title: language === 'he' ? 'שגיאה' : 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (data.user) {
+        toast({
+          title: language === 'he' ? 'התחברות הצליחה!' : 'Login successful!',
+          description: language === 'he' ? 'מעביר אותך ללוח הבקרה...' : 'Redirecting to dashboard...',
+        });
+        navigate('/dashboard', { replace: true });
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      toast({
+        title: language === 'he' ? 'שגיאה' : 'Error',
+        description: language === 'he' ? 'אירעה שגיאה' : 'An error occurred',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
