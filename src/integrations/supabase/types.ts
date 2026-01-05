@@ -14,6 +14,186 @@ export type Database = {
   }
   public: {
     Tables: {
+      automation_runs: {
+        Row: {
+          automation_id: string
+          completed_at: string | null
+          error_message: string | null
+          id: string
+          organization_id: string
+          result: Json | null
+          rows_processed: number | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          automation_id: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          result?: Json | null
+          rows_processed?: number | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          automation_id?: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          result?: Json | null
+          rows_processed?: number | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_automation_id_fkey"
+            columns: ["automation_id"]
+            isOneToOne: false
+            referencedRelation: "automations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automations: {
+        Row: {
+          action_config: Json | null
+          action_type: string
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean | null
+          name: string
+          organization_id: string
+          source_id: string | null
+          trigger_config: Json | null
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          action_config?: Json | null
+          action_type: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          organization_id: string
+          source_id?: string | null
+          trigger_config?: Json | null
+          trigger_type: string
+          updated_at?: string
+        }
+        Update: {
+          action_config?: Json | null
+          action_type?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          organization_id?: string
+          source_id?: string | null
+          trigger_config?: Json | null
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automations_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      files: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          mime_type: string
+          name: string
+          ocr_confidence: number | null
+          organization_id: string
+          original_name: string
+          size_bytes: number
+          source_id: string | null
+          status: string
+          storage_path: string
+          text_direction: string | null
+          updated_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mime_type: string
+          name: string
+          ocr_confidence?: number | null
+          organization_id: string
+          original_name: string
+          size_bytes: number
+          source_id?: string | null
+          status?: string
+          storage_path: string
+          text_direction?: string | null
+          updated_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mime_type?: string
+          name?: string
+          ocr_confidence?: number | null
+          organization_id?: string
+          original_name?: string
+          size_bytes?: number
+          source_id?: string | null
+          status?: string
+          storage_path?: string
+          text_direction?: string | null
+          updated_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string
@@ -73,6 +253,124 @@ export type Database = {
           },
         ]
       }
+      sources: {
+        Row: {
+          config: Json | null
+          created_at: string
+          created_by: string
+          id: string
+          last_sync_at: string | null
+          name: string
+          organization_id: string
+          record_count: number | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string
+          created_by: string
+          id?: string
+          last_sync_at?: string | null
+          name: string
+          organization_id: string
+          record_count?: number | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          last_sync_at?: string | null
+          name?: string
+          organization_id?: string
+          record_count?: number | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sources_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_stats: {
+        Row: {
+          automation_runs_month: number | null
+          billing_cycle_start: string | null
+          created_at: string
+          files_uploaded_month: number | null
+          grace_period_ends_at: string | null
+          id: string
+          is_view_only: boolean | null
+          limits_exceeded_at: string | null
+          max_automation_runs_month: number | null
+          max_files_month: number | null
+          max_rows_month: number | null
+          max_sources: number | null
+          organization_id: string
+          plan_type: string
+          rows_processed_month: number | null
+          sources_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          automation_runs_month?: number | null
+          billing_cycle_start?: string | null
+          created_at?: string
+          files_uploaded_month?: number | null
+          grace_period_ends_at?: string | null
+          id?: string
+          is_view_only?: boolean | null
+          limits_exceeded_at?: string | null
+          max_automation_runs_month?: number | null
+          max_files_month?: number | null
+          max_rows_month?: number | null
+          max_sources?: number | null
+          organization_id: string
+          plan_type?: string
+          rows_processed_month?: number | null
+          sources_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          automation_runs_month?: number | null
+          billing_cycle_start?: string | null
+          created_at?: string
+          files_uploaded_month?: number | null
+          grace_period_ends_at?: string | null
+          id?: string
+          is_view_only?: boolean | null
+          limits_exceeded_at?: string | null
+          max_automation_runs_month?: number | null
+          max_files_month?: number | null
+          max_rows_month?: number | null
+          max_sources?: number | null
+          organization_id?: string
+          plan_type?: string
+          rows_processed_month?: number | null
+          sources_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_stats_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -99,6 +397,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_usage_limit: {
+        Args: { _limit_type: string; _organization_id: string }
+        Returns: string
+      }
       get_user_organization_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -106,6 +408,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_usage: {
+        Args: {
+          _amount?: number
+          _counter_type: string
+          _organization_id: string
+        }
+        Returns: undefined
       }
       same_organization: { Args: { _user_id: string }; Returns: boolean }
     }
