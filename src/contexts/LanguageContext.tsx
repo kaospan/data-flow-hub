@@ -49,6 +49,9 @@ const translations: Record<Language, Record<string, string>> = {
     'dashboard.newAutomation': 'אוטומציה חדשה',
     'dashboard.recentActivity': 'פעילות אחרונה',
     'dashboard.quickActions': 'פעולות מהירות',
+    'dashboard.team': 'צוות',
+    'dashboard.viewOnly': 'מצב צפייה בלבד',
+    'dashboard.upgradeNow': 'שדרג עכשיו',
     
     // Sources
     'sources.title': 'מקורות נתונים',
@@ -59,6 +62,9 @@ const translations: Record<Language, Record<string, string>> = {
     'sources.spreadsheet': 'גיליון אלקטרוני',
     'sources.image': 'תמונה / OCR',
     'sources.video': 'וידאו / תמלול',
+    'sources.files': 'קבצים',
+    'sources.noSources': 'אין מקורות או קבצים',
+    'sources.addFirst': 'העלו קובץ או הוסיפו מקור נתונים כדי להתחיל',
     
     // Automations
     'automations.title': 'אוטומציות',
@@ -68,6 +74,9 @@ const translations: Record<Language, Record<string, string>> = {
     'automations.trigger.upload': 'בהעלאה',
     'automations.trigger.update': 'בעדכון',
     'automations.trigger.schedule': 'מתוזמן',
+    'automations.recentRuns': 'הרצות אחרונות',
+    'automations.noAutomations': 'לא נמצאו אוטומציות',
+    'automations.createFirst': 'צרו אוטומציה חדשה כדי להתחיל',
     
     // Settings
     'settings.title': 'הגדרות',
@@ -89,6 +98,15 @@ const translations: Record<Language, Record<string, string>> = {
     'plans.monthly': 'חודשי',
     'plans.yearly': 'שנתי',
     'plans.perMonth': 'לחודש',
+    'plans.free': 'חינמי',
+    
+    // Usage
+    'usage.records': 'רשומות',
+    'usage.automationRuns': 'הרצות אוטומציה',
+    'usage.files': 'קבצים',
+    'usage.sources': 'מקורות',
+    'usage.limitReached': 'הגעתם לגבול השימוש',
+    'usage.upgradeMessage': 'שדרגו כדי להמשיך',
     
     // Auth
     'auth.email': 'אימייל',
@@ -115,6 +133,18 @@ const translations: Record<Language, Record<string, string>> = {
     'common.next': 'הבא',
     'common.back': 'חזרה',
     'common.submit': 'שליחה',
+    'common.refresh': 'רענן',
+    'common.runNow': 'הרץ עכשיו',
+    
+    // Status
+    'status.active': 'פעיל',
+    'status.processing': 'בעיבוד',
+    'status.error': 'שגיאה',
+    'status.pending': 'ממתין',
+    'status.completed': 'הושלם',
+    'status.failed': 'נכשל',
+    'status.running': 'רץ',
+    'status.cancelled': 'בוטל',
   },
   en: {
     // Navigation
@@ -155,6 +185,9 @@ const translations: Record<Language, Record<string, string>> = {
     'dashboard.newAutomation': 'New Automation',
     'dashboard.recentActivity': 'Recent Activity',
     'dashboard.quickActions': 'Quick Actions',
+    'dashboard.team': 'Team',
+    'dashboard.viewOnly': 'View-Only Mode',
+    'dashboard.upgradeNow': 'Upgrade Now',
     
     // Sources
     'sources.title': 'Data Sources',
@@ -165,6 +198,9 @@ const translations: Record<Language, Record<string, string>> = {
     'sources.spreadsheet': 'Spreadsheet',
     'sources.image': 'Image / OCR',
     'sources.video': 'Video / Transcript',
+    'sources.files': 'Files',
+    'sources.noSources': 'No sources or files yet',
+    'sources.addFirst': 'Upload a file or add a data source to get started',
     
     // Automations
     'automations.title': 'Automations',
@@ -174,6 +210,9 @@ const translations: Record<Language, Record<string, string>> = {
     'automations.trigger.upload': 'On Upload',
     'automations.trigger.update': 'On Update',
     'automations.trigger.schedule': 'Scheduled',
+    'automations.recentRuns': 'Recent Runs',
+    'automations.noAutomations': 'No automations found',
+    'automations.createFirst': 'Create a new automation to get started',
     
     // Settings
     'settings.title': 'Settings',
@@ -195,6 +234,15 @@ const translations: Record<Language, Record<string, string>> = {
     'plans.monthly': 'Monthly',
     'plans.yearly': 'Yearly',
     'plans.perMonth': '/month',
+    'plans.free': 'Free',
+    
+    // Usage
+    'usage.records': 'Records',
+    'usage.automationRuns': 'Automation Runs',
+    'usage.files': 'Files',
+    'usage.sources': 'Sources',
+    'usage.limitReached': 'Usage limit reached',
+    'usage.upgradeMessage': 'Upgrade to continue',
     
     // Auth
     'auth.email': 'Email',
@@ -221,6 +269,18 @@ const translations: Record<Language, Record<string, string>> = {
     'common.next': 'Next',
     'common.back': 'Back',
     'common.submit': 'Submit',
+    'common.refresh': 'Refresh',
+    'common.runNow': 'Run Now',
+    
+    // Status
+    'status.active': 'Active',
+    'status.processing': 'Processing',
+    'status.error': 'Error',
+    'status.pending': 'Pending',
+    'status.completed': 'Completed',
+    'status.failed': 'Failed',
+    'status.running': 'Running',
+    'status.cancelled': 'Cancelled',
   },
 };
 
