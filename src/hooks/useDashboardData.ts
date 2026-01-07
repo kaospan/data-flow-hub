@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { usePermissions } from './usePermissions';
 
 interface DashboardStats {
   sourcesCount: number;
@@ -38,7 +39,8 @@ interface RecentActivity {
 }
 
 export function useDashboardData() {
-  const { organization } = useAuth();
+  const { organization, isAdmin } = useAuth();
+  const { canView } = usePermissions();
   const [stats, setStats] = useState<DashboardStats>({
     sourcesCount: 0,
     automationsCount: 0,
@@ -61,13 +63,14 @@ export function useDashboardData() {
       setError(null);
 
       try {
-        // Fetch stats in parallel
-        const [sourcesRes, automationsRes, runsRes, usageRes] = await Promise.all([
+        // Fetch stats in parallel - usage only for admins
+        const baseQueries = [
           supabase.from('sources').select('id', { count: 'exact', head: true }),
           supabase.from('automations').select('id', { count: 'exact', head: true }),
           supabase.from('automation_runs').select('id', { count: 'exact', head: true }),
-          supabase.from('usage_stats').select('*').eq('organization_id', organization.id).single(),
-        ]);
+        ];
+        
+        const [sourcesRes, automationsRes, runsRes] = await Promise.all(baseQueries);
 
         setStats({
           sourcesCount: sourcesRes.count || 0,
@@ -75,20 +78,29 @@ export function useDashboardData() {
           totalRuns: runsRes.count || 0,
         });
 
-        if (usageRes.data) {
-          setUsage({
-            rowsProcessed: usageRes.data.rows_processed_month || 0,
-            maxRows: usageRes.data.max_rows_month || 1000,
-            automationRuns: usageRes.data.automation_runs_month || 0,
-            maxAutomationRuns: usageRes.data.max_automation_runs_month || 50,
-            filesUploaded: usageRes.data.files_uploaded_month || 0,
-            maxFiles: usageRes.data.max_files_month || 10,
-            sourcesCount: usageRes.data.sources_count || 0,
-            maxSources: usageRes.data.max_sources || 3,
-            planType: usageRes.data.plan_type || 'free',
-            isViewOnly: usageRes.data.is_view_only || false,
-            gracePeriodEndsAt: usageRes.data.grace_period_ends_at,
-          });
+        // Only admins can view usage stats
+        if (isAdmin) {
+          const usageRes = await supabase
+            .from('usage_stats')
+            .select('*')
+            .eq('organization_id', organization.id)
+            .single();
+
+          if (usageRes.data) {
+            setUsage({
+              rowsProcessed: usageRes.data.rows_processed_month || 0,
+              maxRows: usageRes.data.max_rows_month || 1000,
+              automationRuns: usageRes.data.automation_runs_month || 0,
+              maxAutomationRuns: usageRes.data.max_automation_runs_month || 50,
+              filesUploaded: usageRes.data.files_uploaded_month || 0,
+              maxFiles: usageRes.data.max_files_month || 10,
+              sourcesCount: usageRes.data.sources_count || 0,
+              maxSources: usageRes.data.max_sources || 3,
+              planType: usageRes.data.plan_type || 'free',
+              isViewOnly: usageRes.data.is_view_only || false,
+              gracePeriodEndsAt: usageRes.data.grace_period_ends_at,
+            });
+          }
         }
 
         // Fetch team members with roles
@@ -97,8 +109,8 @@ export function useDashboardData() {
           .select('id, email, name, organization_id')
           .eq('organization_id', organization.id);
 
-        if (profiles) {
-          // Fetch roles for each profile
+        // Only admins can see team members (they have access to profiles)
+        if (isAdmin && profiles) {
           const { data: roles } = await supabase
             .from('user_roles')
             .select('user_id, role');
@@ -111,6 +123,14 @@ export function useDashboardData() {
           }));
 
           setTeamMembers(membersWithRoles);
+        } else if (profiles) {
+          // Non-admins can only see their own profile
+          setTeamMembers(profiles.map(profile => ({
+            id: profile.id,
+            email: profile.email,
+            name: profile.name,
+            role: 'viewer' as 'admin' | 'editor' | 'viewer', // Default, actual role fetched separately if needed
+          })));
         }
 
         // Fetch recent activity (files + automation runs)
@@ -187,7 +207,7 @@ export function useDashboardData() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [organization?.id]);
+  }, [organization?.id, isAdmin]);
 
-  return { stats, usage, teamMembers, recentActivity, isLoading, error };
+  return { stats, usage, teamMembers, recentActivity, isLoading, error, isAdmin };
 }

@@ -32,8 +32,8 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const { t, language } = useLanguage();
   const { profile, isLoading: authLoading } = useAuth();
-  const { canEdit } = usePermissions();
-  const { stats, usage, teamMembers, recentActivity, isLoading } = useDashboardData();
+  const { canEdit, canView } = usePermissions();
+  const { stats, usage, teamMembers, recentActivity, isLoading, isAdmin } = useDashboardData();
 
   const activityLabels = {
     he: { upload: 'העלאה', automation: 'אוטומציה', source: 'מקור' },
@@ -208,8 +208,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Usage */}
-      {usage && (
+      {/* Usage - Admin only */}
+      {isAdmin && usage && (
         <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">{t('dashboard.usage')}</h2>
@@ -294,20 +294,26 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Team Members */}
+        {/* Team Members - Show link only for admins */}
         <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Users className="w-5 h-5" />
               {language === 'he' ? 'צוות' : 'Team'}
             </h2>
-            <Link to="/dashboard/team">
-              <Button variant="ghost" size="sm">
-                {language === 'he' ? 'צפה בכל' : 'View all'}
-              </Button>
-            </Link>
+            {isAdmin && (
+              <Link to="/dashboard/team">
+                <Button variant="ghost" size="sm">
+                  {language === 'he' ? 'צפה בכל' : 'View all'}
+                </Button>
+              </Link>
+            )}
           </div>
-          {teamMembers.length === 0 ? (
+          {!isAdmin ? (
+            <div className="text-center py-4 text-muted-foreground">
+              <p>{language === 'he' ? 'פנה למנהל לפרטי צוות' : 'Contact admin for team details'}</p>
+            </div>
+          ) : teamMembers.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground">
               <p>{language === 'he' ? 'אין חברי צוות' : 'No team members'}</p>
             </div>
