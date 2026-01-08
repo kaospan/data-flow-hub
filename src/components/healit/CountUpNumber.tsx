@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+const EASE_OUT_EXPONENT = 4;
+
 interface CountUpNumberProps {
   end: number;
   duration?: number;
@@ -30,7 +32,7 @@ export function CountUpNumber({
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
       
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const easeOutQuart = 1 - Math.pow(1 - progress, EASE_OUT_EXPONENT);
       setCount(Math.floor(easeOutQuart * end));
 
       if (progress < 1) {

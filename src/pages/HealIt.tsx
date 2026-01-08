@@ -37,6 +37,23 @@ import { TimelineItem } from '@/components/healit/TimelineItem';
 import { MetricCard } from '@/components/healit/MetricCard';
 import { FeatureCard } from '@/components/healit/FeatureCard';
 
+// Helper function to parse stat values for count-up animation
+function parseStatValue(stat: string): { value: number; prefix: string; suffix: string } {
+  if (stat.startsWith('#')) {
+    return { value: 1, prefix: '#', suffix: '' };
+  }
+  
+  const match = stat.match(/(\d+)-?(\d+)?/);
+  if (!match) {
+    return { value: 0, prefix: '', suffix: '' };
+  }
+  
+  const value = match[2] ? parseInt(match[2]) : parseInt(match[1]);
+  const suffix = stat.includes('%') ? '%' : '';
+  
+  return { value, prefix: '', suffix };
+}
+
 export default function HealIt() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -91,12 +108,12 @@ export default function HealIt() {
               key={i}
               className="absolute w-2 h-2 bg-primary/20 rounded-full"
               initial={{
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: typeof window !== 'undefined' ? Math.random() * window.innerWidth : Math.random() * 1200,
+                y: typeof window !== 'undefined' ? Math.random() * window.innerHeight : Math.random() * 800,
               }}
               animate={{
-                y: [null, Math.random() * window.innerHeight],
-                x: [null, Math.random() * window.innerWidth],
+                y: [null, typeof window !== 'undefined' ? Math.random() * window.innerHeight : Math.random() * 800],
+                x: [null, typeof window !== 'undefined' ? Math.random() * window.innerWidth : Math.random() * 1200],
               }}
               transition={{
                 duration: Math.random() * 20 + 10,
@@ -249,12 +266,7 @@ export default function HealIt() {
                     </div>
                     <CardTitle className={`text-5xl font-bold ${item.color}`}>
                       <CountUpNumber 
-                        end={typeof item.stat === 'string' && item.stat.includes('-') 
-                          ? parseInt(item.stat.split('-')[1]) 
-                          : parseInt(item.stat) || 1
-                        }
-                        prefix={item.stat === '#1' ? '#' : ''}
-                        suffix={item.suffix || ''}
+                        {...parseStatValue(item.stat)}
                       />
                     </CardTitle>
                     <CardTitle className="text-lg">{item.title}</CardTitle>
