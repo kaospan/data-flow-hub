@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, Shield, AlertTriangle, CheckCircle, Eye, FileCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileSpreadsheet, Sparkles, Zap, Upload, FileSearch } from 'lucide-react';
 
 export function HeroSection() {
   const { language } = useLanguage();
@@ -9,27 +9,27 @@ export function HeroSection() {
 
   const content = {
     he: {
-      badge: 'AI בפיקוח מומחים',
-      title: 'ראו מה קורה לנתונים שלכם כשאף אחד לא צופה',
-      subtitle: 'בדקו את מה שה-AI חילץ. וודאו שלא התפספס כלום. שמרו על עקבות ביקורת מלאות.',
+      badge: 'AI חכם לנתונים',
+      title: 'הפכו מסמכים לנתונים מובנים',
+      subtitle: 'העלו קבצים, תמונות או PDF - וקבלו נתונים מסודרים ומוכנים לשימוש תוך שניות',
       cta: 'התחילו בחינם',
-      secondary: 'קבעו הדגמה',
+      secondary: 'צפו בהדגמה',
       trustPoints: [
-        { icon: Eye, text: 'כל שלב ניתן לבדיקה' },
-        { icon: Shield, text: 'תיעוד מלא לביקורת' },
-        { icon: CheckCircle, text: 'אימות אנושי' },
+        { icon: Upload, text: 'העלאה פשוטה' },
+        { icon: FileSearch, text: 'זיהוי אוטומטי' },
+        { icon: Sparkles, text: 'עיבוד AI' },
       ],
     },
     en: {
-      badge: 'Human-Supervised AI',
-      title: 'See what your data is doing when no one is watching',
-      subtitle: 'Review what AI extracted. Verify nothing was missed. Keep complete audit trails.',
-      cta: 'Start Free Trial',
-      secondary: 'Schedule Demo',
+      badge: 'Smart Data AI',
+      title: 'Turn documents into structured data',
+      subtitle: 'Upload files, images, or PDFs - get organized, ready-to-use data in seconds',
+      cta: 'Start Free',
+      secondary: 'Watch Demo',
       trustPoints: [
-        { icon: Eye, text: 'Every step reviewable' },
-        { icon: Shield, text: 'Full audit trail' },
-        { icon: CheckCircle, text: 'Human validation' },
+        { icon: Upload, text: 'Easy upload' },
+        { icon: FileSearch, text: 'Auto detection' },
+        { icon: Sparkles, text: 'AI processing' },
       ],
     },
   };
@@ -38,12 +38,12 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Background Effects - Serious, professional tones */}
+      {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/20" />
       <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-destructive/3 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-3xl" />
       
-      {/* Subtle grid pattern */}
+      {/* Grid pattern */}
       <div 
         className="absolute inset-0 opacity-[0.02]"
         style={{
@@ -54,18 +54,18 @@ export function HeroSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge - Authority, not playfulness */}
+          {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border text-foreground text-sm font-medium mb-8 animate-fade-in">
-            <Shield className="w-4 h-4 text-primary" />
+            <Sparkles className="w-4 h-4 text-primary" />
             <span>{t.badge}</span>
           </div>
 
-          {/* Title - Fear hook */}
+          {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-slide-up leading-tight" style={{ animationDelay: '0.1s' }}>
             {t.title}
           </h1>
 
-          {/* Subtitle - Relief */}
+          {/* Subtitle */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
             {t.subtitle}
           </p>
@@ -85,46 +85,44 @@ export function HeroSection() {
             </Link>
           </div>
 
-          {/* Trust Points - The relief */}
+          {/* Trust Points */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             {t.trustPoints.map((point, index) => (
               <div key={index} className="flex items-center gap-2 text-muted-foreground">
-                <point.icon className="w-5 h-5 text-success" />
+                <point.icon className="w-5 h-5 text-primary" />
                 <span className="text-sm font-medium">{point.text}</span>
               </div>
             ))}
           </div>
 
-          {/* Visual representation - Data flow with checkpoints */}
+          {/* Visual representation - Document to Data */}
           <div className="mt-16 relative animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="glass-card p-8 md:p-12 max-w-3xl mx-auto">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                {/* Messy input */}
+                {/* Raw documents */}
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-16 h-16 rounded-xl bg-warning/10 flex items-center justify-center">
-                    <AlertTriangle className="w-8 h-8 text-warning" />
+                  <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center">
+                    <FileSpreadsheet className="w-8 h-8 text-muted-foreground" />
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    {language === 'he' ? 'נתונים לא מובנים' : 'Unstructured Data'}
+                    {language === 'he' ? 'מסמכים' : 'Documents'}
                   </span>
                 </div>
 
                 {/* Arrow */}
                 <div className="hidden md:block flex-1 border-t-2 border-dashed border-border relative">
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3">
-                    <span className="text-xs text-muted-foreground">
-                      {language === 'he' ? 'AI + בדיקה' : 'AI + Review'}
-                    </span>
+                    <Zap className="w-5 h-5 text-primary" />
                   </div>
                 </div>
 
-                {/* Validated output */}
+                {/* Structured data */}
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-16 h-16 rounded-xl bg-success/10 flex items-center justify-center">
-                    <FileCheck className="w-8 h-8 text-success" />
+                  <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="w-8 h-8 text-primary" />
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    {language === 'he' ? 'נתונים מאומתים' : 'Validated Data'}
+                    {language === 'he' ? 'נתונים מובנים' : 'Structured Data'}
                   </span>
                 </div>
               </div>

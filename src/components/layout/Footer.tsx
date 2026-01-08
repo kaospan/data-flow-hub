@@ -45,6 +45,11 @@ export function Footer() {
                   {language === 'he' ? 'תיעוד' : 'Documentation'}
                 </Link>
               </li>
+              <li>
+                <Link to="/healit" className="hover:text-foreground transition-colors">
+                  HealIT
+                </Link>
+              </li>
             </ul>
           </div>
 
