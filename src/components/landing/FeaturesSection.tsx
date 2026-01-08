@@ -1,17 +1,14 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { 
-  Eye, 
-  Shield, 
-  ClipboardCheck, 
-  AlertCircle,
   FileSpreadsheet, 
   Image, 
   Video, 
   Link2, 
   FileText,
-  UserCheck,
-  BarChart3,
-  Clock
+  Upload,
+  Cpu,
+  Zap,
+  Download
 } from 'lucide-react';
 
 export function FeaturesSection() {
@@ -19,90 +16,74 @@ export function FeaturesSection() {
 
   const content = {
     he: {
-      sectionTitle: 'למה עסקים בוחרים בנו',
-      sectionSubtitle: 'כי התעלמות מהבעיה הרגישה כבר לא אחראית',
+      sectionTitle: 'הכל במקום אחד',
+      sectionSubtitle: 'פלטפורמה מלאה לקליטה, עיבוד וייצוא נתונים',
       features: [
         {
-          icon: Eye,
-          title: 'ראו מה פספסתם',
-          description: 'הצגת נתונים לא מעובדים, קבצים שנשכחו, ותהליכים שנתקעו - לפני שזה הופך לבעיה.',
-          color: 'text-warning',
-          bgColor: 'bg-warning/10',
+          icon: Upload,
+          title: 'קליטת נתונים',
+          description: 'העלו קבצים מכל סוג - Excel, CSV, תמונות, PDF ועוד. זיהוי אוטומטי של מבנה.',
+          color: 'text-primary',
+          bgColor: 'bg-primary/10',
         },
         {
-          icon: UserCheck,
-          title: 'מומחה בתוך התהליך',
-          description: 'כל חילוץ AI ניתן לבדיקה ואישור על ידי מומחה - עם תיעוד מי אישר ומתי.',
-          color: 'text-success',
-          bgColor: 'bg-success/10',
-        },
-        {
-          icon: Shield,
-          title: 'עקבות ביקורת מלאות',
-          description: 'כל שלב מתועד: קלט גולמי, פלט AI, תיקונים אנושיים. מוכן לכל ביקורת.',
+          icon: Cpu,
+          title: 'עיבוד AI חכם',
+          description: 'חילוץ אוטומטי של מידע מתמונות (OCR), מסמכים ווידאו עם דיוק גבוה.',
           color: 'text-info',
           bgColor: 'bg-info/10',
         },
         {
-          icon: BarChart3,
-          title: 'AI שניתן לניטור',
-          description: 'עקבו אחר ביצועי AI לאורך זמן - ציוני ביטחון, שיעורי תיקון, חריגות.',
-          color: 'text-primary',
-          bgColor: 'bg-primary/10',
+          icon: Zap,
+          title: 'אוטומציה',
+          description: 'הגדירו כללים והפעלות אוטומטיות - עיבוד מיידי או מתוזמן.',
+          color: 'text-warning',
+          bgColor: 'bg-warning/10',
+        },
+        {
+          icon: Download,
+          title: 'ייצוא וחיבורים',
+          description: 'ייצוא לקבצים, שליחה ל-Webhooks או חיבור ל-API שלכם.',
+          color: 'text-success',
+          bgColor: 'bg-success/10',
         },
       ],
-      painPoints: {
-        title: 'אנשים לא משלמים על תכונות. הם משלמים על הקלה.',
-        points: [
-          { icon: Clock, text: 'שעות שנבזבזו על ניקוי Excel ידני' },
-          { icon: AlertCircle, text: 'שגיאות שמתגלות רק בביקורת' },
-          { icon: ClipboardCheck, text: 'חוסר ודאות לגבי מה בתוך הנתונים' },
-        ],
-      },
-      sourcesTitle: 'עובד עם כל סוג נתונים',
+      sourcesTitle: 'עובד עם כל סוג קובץ',
     },
     en: {
-      sectionTitle: 'Why Businesses Choose Us',
-      sectionSubtitle: 'Because ignoring the problem already feels irresponsible',
+      sectionTitle: 'All in One Place',
+      sectionSubtitle: 'Complete platform for data ingestion, processing, and export',
       features: [
         {
-          icon: Eye,
-          title: 'See What You\'re Missing',
-          description: 'Surface unprocessed data, forgotten files, stuck workflows - before they become problems.',
-          color: 'text-warning',
-          bgColor: 'bg-warning/10',
+          icon: Upload,
+          title: 'Data Ingestion',
+          description: 'Upload any file type - Excel, CSV, images, PDF and more. Automatic structure detection.',
+          color: 'text-primary',
+          bgColor: 'bg-primary/10',
         },
         {
-          icon: UserCheck,
-          title: 'Expert in the Loop',
-          description: 'Every AI extraction can be reviewed and approved by a human - with logs of who approved what, when.',
-          color: 'text-success',
-          bgColor: 'bg-success/10',
-        },
-        {
-          icon: Shield,
-          title: 'Complete Audit Trail',
-          description: 'Every step documented: raw input, AI output, human corrections. Ready for any audit.',
+          icon: Cpu,
+          title: 'Smart AI Processing',
+          description: 'Automatic extraction from images (OCR), documents and video with high accuracy.',
           color: 'text-info',
           bgColor: 'bg-info/10',
         },
         {
-          icon: BarChart3,
-          title: 'AI You Can Monitor',
-          description: 'Track AI performance over time - confidence scores, correction rates, anomalies.',
-          color: 'text-primary',
-          bgColor: 'bg-primary/10',
+          icon: Zap,
+          title: 'Automation',
+          description: 'Set up rules and automatic triggers - instant or scheduled processing.',
+          color: 'text-warning',
+          bgColor: 'bg-warning/10',
+        },
+        {
+          icon: Download,
+          title: 'Export & Integrations',
+          description: 'Export to files, send to Webhooks, or connect to your API.',
+          color: 'text-success',
+          bgColor: 'bg-success/10',
         },
       ],
-      painPoints: {
-        title: 'People don\'t pay for features. They pay for relief.',
-        points: [
-          { icon: Clock, text: 'Hours wasted on manual Excel cleanup' },
-          { icon: AlertCircle, text: 'Errors discovered only during audits' },
-          { icon: ClipboardCheck, text: 'Uncertainty about what\'s in the data' },
-        ],
-      },
-      sourcesTitle: 'Works with any data type',
+      sourcesTitle: 'Works with any file type',
     },
   };
 
@@ -127,19 +108,6 @@ export function FeaturesSection() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {t.sectionSubtitle}
           </p>
-        </div>
-
-        {/* Pain Points - The fear before the relief */}
-        <div className="glass-card p-8 mb-16 max-w-4xl mx-auto">
-          <h3 className="text-xl font-semibold mb-6 text-center">{t.painPoints.title}</h3>
-          <div className="flex flex-wrap justify-center gap-6">
-            {t.painPoints.points.map((point, index) => (
-              <div key={index} className="flex items-center gap-3 px-4 py-2 rounded-lg bg-destructive/5 border border-destructive/10">
-                <point.icon className="w-5 h-5 text-destructive" />
-                <span className="text-sm">{point.text}</span>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Features Grid */}
