@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4 # v4 is current major
+        # Docs: https://github.com/actions/checkout
+        # (pin to a commit SHA later for max supply-chain safety)
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      # Lint if you have it (won't fail if script doesn't exist)
+      - name: Lint (if present)
+        run: npm run -s lint --if-present
+
+      # Run tests if you have them (won't fail if script doesn't exist)
+      - name: Test (if present)
+        run: npm test --if-present
+
+      - name: Build
+        run: npm run build
