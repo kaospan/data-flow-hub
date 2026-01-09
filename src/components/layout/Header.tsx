@@ -55,6 +55,14 @@ export function Header() {
             >
               {t('nav.pricing')}
             </Link>
+            <Link
+              to="/healit"
+              className={`text-sm font-medium transition-colors ${
+                isActive('/healit') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              HealIT
+            </Link>
           </nav>
 
           {/* Actions */}
@@ -116,6 +124,13 @@ export function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.pricing')}
+              </Link>
+              <Link
+                to="/healit"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                HealIT
               </Link>
               <div className="flex items-center gap-3 pt-4 border-t border-border/50">
                 <Button
