@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,7 +21,28 @@ import {
 const Settings = () => {
   const { t, language, setLanguage } = useLanguage();
   const { toast } = useToast();
+  const { profile, organization, role } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+
+  const getInitials = (name: string | null, email: string | null) => {
+    if (name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    if (email) {
+      return email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
+  const getRoleDisplay = (userRole: string | null) => {
+    if (!userRole) return language === 'he' ? 'צופה' : 'Viewer';
+    const roleMap: Record<string, { he: string; en: string }> = {
+      admin: { he: 'מנהל', en: 'Admin' },
+      editor: { he: 'עורך', en: 'Editor' },
+      viewer: { he: 'צופה', en: 'Viewer' },
+    };
+    return roleMap[userRole]?.[language] || userRole;
+  };
 
   const handleSave = () => {
     setIsLoading(true);
@@ -75,7 +97,7 @@ const Settings = () => {
             <div className="flex items-center gap-6 mb-8">
               <Avatar className="w-20 h-20">
                 <AvatarFallback className="bg-primary/20 text-primary text-2xl">
-                  IY
+                  {getInitials(profile?.name ?? null, profile?.email ?? null)}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -89,22 +111,23 @@ const Settings = () => {
               <div className="space-y-2">
                 <Label>{t('auth.fullName')}</Label>
                 <Input
-                  defaultValue={language === 'he' ? 'ישראל ישראלי' : 'Israel Israeli'}
+                  defaultValue={profile?.name || ''}
+                  placeholder={language === 'he' ? 'הזן שם מלא' : 'Enter full name'}
                   className="bg-secondary/50"
                 />
               </div>
               <div className="space-y-2">
                 <Label>{t('auth.email')}</Label>
-                <Input defaultValue="israel@company.co.il" className="bg-secondary/50" />
-              </div>
-              <div className="space-y-2">
-                <Label>{language === 'he' ? 'טלפון' : 'Phone'}</Label>
-                <Input defaultValue="+972-50-1234567" className="bg-secondary/50" />
+                <Input 
+                  defaultValue={profile?.email || ''} 
+                  className="bg-secondary/50" 
+                  disabled 
+                />
               </div>
               <div className="space-y-2">
                 <Label>{language === 'he' ? 'תפקיד' : 'Role'}</Label>
                 <Input
-                  defaultValue={language === 'he' ? 'מנהל' : 'Admin'}
+                  defaultValue={getRoleDisplay(role)}
                   className="bg-secondary/50"
                   disabled
                 />
@@ -172,7 +195,8 @@ const Settings = () => {
               <div className="space-y-2">
                 <Label>{t('auth.companyName')}</Label>
                 <Input
-                  defaultValue={language === 'he' ? 'חברה לדוגמה בע"מ' : 'Example Company Ltd.'}
+                  defaultValue={organization?.name || ''}
+                  placeholder={language === 'he' ? 'שם הארגון' : 'Organization name'}
                   className="bg-secondary/50"
                 />
               </div>
