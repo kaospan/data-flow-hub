@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
+import { HealITHeader } from '@/components/healit/HealITHeader';
+import { HealITFooter } from '@/components/healit/HealITFooter';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -21,11 +22,15 @@ import {
   Stethoscope,
   Bell,
   Users,
-  TrendingUp
+  TrendingUp,
+  Heart,
+  Activity,
+  Sparkles
 } from 'lucide-react';
 
 export default function HealIT() {
   const { language } = useLanguage();
+  const { theme } = useTheme();
   const Arrow = language === 'he' ? ArrowLeft : ArrowRight;
 
   const content = {
@@ -53,43 +58,31 @@ export default function HealIT() {
             icon: FileText,
             title: 'תיעוד רפואי חכם',
             description: 'AI כותב את התיעוד הרפואי בזמן אמת מדיבור או טקסט חופשי. אתם רק מאשרים ומשלימים.',
-            color: 'text-primary',
-            bgColor: 'bg-primary/10',
           },
           {
             icon: Calendar,
             title: 'תזמון תורים אוטומטי',
             description: 'המערכת מזהה צורך במעקב ומציעה תאריכים אופטימליים. חולים מזמינים בלינק או בטלפון.',
-            color: 'text-success',
-            bgColor: 'bg-success/10',
           },
           {
             icon: Bell,
             title: 'תזכורות חכמות',
             description: 'תזכורות אוטומטיות לחולים (SMS/WhatsApp), תזכורות לרופאים על ממצאים שדורשים מעקב.',
-            color: 'text-warning',
-            bgColor: 'bg-warning/10',
           },
           {
             icon: Users,
             title: 'מעקב אחר חולים',
             description: 'רשימת מעקב חכמה: מיהו בסיכון, מי לא הגיע למעקב, אילו בדיקות חסרות. בעדיפות קלינית.',
-            color: 'text-info',
-            bgColor: 'bg-info/10',
           },
           {
             icon: Stethoscope,
             title: 'חיבור לכללית/מכבי',
             description: 'קריאה אוטומטית של תוצאות מעבדה, מכתבי הפניה ואבחנות מהקופות. בזמן אמת.',
-            color: 'text-purple-500',
-            bgColor: 'bg-purple-50',
           },
           {
             icon: TrendingUp,
             title: 'ניתוח מגמות',
             description: 'זיהוי אוטומטי של ממצאים מחמירים לאורך זמן (למשל: קריאטינין עולה, HbA1c לא משתפר).',
-            color: 'text-destructive',
-            bgColor: 'bg-destructive/10',
           },
         ],
       },
@@ -165,43 +158,31 @@ export default function HealIT() {
             icon: FileText,
             title: 'Smart Medical Documentation',
             description: 'AI writes clinical notes in real-time from speech or free text. You just review and approve.',
-            color: 'text-primary',
-            bgColor: 'bg-primary/10',
           },
           {
             icon: Calendar,
             title: 'Automated Appointment Scheduling',
             description: 'System detects follow-up needs and suggests optimal dates. Patients book via link or phone.',
-            color: 'text-success',
-            bgColor: 'bg-success/10',
           },
           {
             icon: Bell,
             title: 'Smart Reminders',
             description: 'Automated patient reminders (SMS/WhatsApp), physician alerts for findings requiring follow-up.',
-            color: 'text-warning',
-            bgColor: 'bg-warning/10',
           },
           {
             icon: Users,
             title: 'Patient Tracking',
             description: 'Smart tracking list: who\'s at risk, who missed follow-up, which tests are missing. Prioritized clinically.',
-            color: 'text-info',
-            bgColor: 'bg-info/10',
           },
           {
             icon: Stethoscope,
             title: 'HMO Integration',
             description: 'Automatic retrieval of lab results, referral letters, and diagnoses from Kupot Holim. Real-time.',
-            color: 'text-purple-500',
-            bgColor: 'bg-purple-50',
           },
           {
             icon: TrendingUp,
             title: 'Trend Analysis',
             description: 'Automatic detection of worsening findings over time (e.g., rising creatinine, unimproved HbA1c).',
-            color: 'text-destructive',
-            bgColor: 'bg-destructive/10',
           },
         ],
       },
@@ -258,152 +239,149 @@ export default function HealIT() {
   const t = content[language];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <div className={`healit-page min-h-screen flex flex-col ${theme}`}>
+      <HealITHeader />
       
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-success/5" />
-        <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-gradient-to-tl from-success/8 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s' }} />
+      {/* Hero Section - Completely Different Medical Theme */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        {/* Soft medical gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-cyan-50/50 to-white dark:from-slate-900 dark:via-teal-950/30 dark:to-slate-950" />
         
-        <div 
-          className="absolute inset-0 opacity-[0.02]"
+        {/* Floating medical symbols */}
+        <div className="absolute top-1/4 left-[10%] w-64 h-64 rounded-full bg-teal-200/30 dark:bg-teal-500/10 blur-3xl" />
+        <div className="absolute bottom-1/4 right-[10%] w-80 h-80 rounded-full bg-cyan-200/30 dark:bg-cyan-500/10 blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-emerald-200/20 dark:bg-emerald-500/10 blur-2xl" />
+        
+        {/* Decorative cross pattern */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]"
           style={{
-            backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 0h10v25h25v10H35v25H25V35H0V25h25V0z' fill='%230d9488' fill-opacity='0.5'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
           }}
         />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/10 to-success/10 border border-primary/20 text-foreground text-sm font-semibold mb-10 animate-fade-in backdrop-blur-sm shadow-lg shadow-primary/5">
-              <Stethoscope className="w-5 h-5 text-primary" />
-              <span className="bg-gradient-to-r from-primary to-success bg-clip-text text-transparent">{t.badge}</span>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-teal-200 dark:border-teal-700/50 shadow-lg shadow-teal-500/10 mb-10">
+              <Heart className="w-5 h-5 text-teal-500" />
+              <span className="font-semibold text-teal-700 dark:text-teal-300">{t.badge}</span>
+              <Sparkles className="w-4 h-4 text-cyan-500" />
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 animate-slide-up leading-tight bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent" style={{ animationDelay: '0.1s' }}>
-              {t.title}
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight text-slate-800 dark:text-white">
+              {t.title.split(':')[0]}:
+              <span className="block mt-2 healit-gradient-text">
+                {t.title.split(':')[1]}
+              </span>
             </h1>
 
-            <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground/80 mb-12 max-w-3xl mx-auto animate-slide-up font-light leading-relaxed" style={{ animationDelay: '0.2s' }}>
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
               {t.subtitle}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
               <Link to="/signup">
-                <Button variant="hero" size="xl" className="shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all duration-500 hover:scale-105">
+                <Button className="healit-btn-primary text-lg px-8 py-6 h-auto">
                   {t.cta}
-                  <Arrow className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  <Arrow className="w-5 h-5 ms-2" />
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="heroOutline" size="xl" className="backdrop-blur-sm hover:bg-secondary/50 transition-all duration-500 hover:scale-105">
+                <Button 
+                  variant="outline" 
+                  className="text-lg px-8 py-6 h-auto border-2 border-teal-200 dark:border-teal-700 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30"
+                >
                   {t.secondary}
                 </Button>
               </Link>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 mb-20 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            {/* Trust Points */}
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-16">
               {t.trustPoints.map((point, index) => (
-                <div key={index} className="flex items-center gap-3 text-muted-foreground group hover:text-foreground transition-colors duration-300">
-                  <div className="p-2 rounded-lg bg-success/10 group-hover:bg-success/20 transition-colors duration-300">
-                    <point.icon className="w-5 h-5 text-success" />
+                <div key={index} className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-teal-100 dark:border-teal-800/50 shadow-sm">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-400 text-white">
+                    <point.icon className="w-5 h-5" />
                   </div>
-                  <span className="text-sm font-semibold">{point.text}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-200">{point.text}</span>
                 </div>
               ))}
             </div>
 
-            {/* Visual Flow */}
-            <div className="mt-20 relative animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <div className="relative p-1 rounded-3xl bg-gradient-to-r from-primary/30 via-success/30 to-primary/30 max-w-4xl mx-auto">
-                <div className="glass-card p-10 md:p-16 rounded-3xl bg-background/95 backdrop-blur-xl">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-                    <div className="flex flex-col items-center gap-4 group cursor-pointer">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-info to-info/50 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-                        <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-info/20 to-info/10 flex items-center justify-center border border-info/30 group-hover:scale-110 transition-transform duration-500">
-                          <Users className="w-10 h-10 text-info" />
-                        </div>
-                      </div>
-                      <span className="text-base font-semibold text-muted-foreground group-hover:text-foreground transition-colors">{t.visualFlow.input}</span>
-                    </div>
-
-                    <div className="hidden md:flex flex-1 items-center gap-3 px-6">
-                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-                      <div className="px-4 py-2 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/50">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t.visualFlow.process}</span>
-                      </div>
-                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-4 group cursor-pointer">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-success to-success/50 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-                        <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-success/20 to-success/10 flex items-center justify-center border border-success/30 group-hover:scale-110 transition-transform duration-500">
-                          <CheckCircle className="w-10 h-10 text-success" />
-                        </div>
-                      </div>
-                      <span className="text-base font-semibold text-muted-foreground group-hover:text-foreground transition-colors">{t.visualFlow.output}</span>
-                    </div>
+            {/* Visual Flow Card */}
+            <div className="healit-card p-8 md:p-12 max-w-4xl mx-auto healit-glow">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex flex-col items-center gap-3 group">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:scale-110 transition-transform">
+                    <Users className="w-10 h-10 text-white" />
                   </div>
+                  <span className="font-semibold text-slate-600 dark:text-slate-300">{t.visualFlow.input}</span>
+                </div>
+
+                <div className="hidden md:flex flex-1 items-center gap-3">
+                  <div className="flex-1 h-1 bg-gradient-to-r from-cyan-200 via-teal-300 to-emerald-200 dark:from-cyan-800 dark:via-teal-700 dark:to-emerald-800 rounded-full" />
+                  <div className="px-4 py-2 rounded-full bg-teal-100 dark:bg-teal-900/50 border border-teal-200 dark:border-teal-700">
+                    <span className="text-sm font-semibold text-teal-700 dark:text-teal-300">{t.visualFlow.process}</span>
+                  </div>
+                  <div className="flex-1 h-1 bg-gradient-to-r from-emerald-200 via-teal-300 to-cyan-200 dark:from-emerald-800 dark:via-teal-700 dark:to-cyan-800 rounded-full" />
+                </div>
+
+                <div className="flex flex-col items-center gap-3 group">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform">
+                    <CheckCircle className="w-10 h-10 text-white" />
+                  </div>
+                  <span className="font-semibold text-slate-600 dark:text-slate-300">{t.visualFlow.output}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-950 to-transparent" />
       </section>
 
       {/* Features Section */}
-      <section className="py-32 relative">
+      <section className="py-24 bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-slate-800 dark:text-white">
               {t.features.title}
             </h2>
-            <p className="text-xl md:text-2xl text-muted-foreground/70 max-w-3xl mx-auto font-light">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               {t.features.subtitle}
             </p>
           </div>
 
-          {/* Pain Points */}
-          <div className="relative p-1 rounded-3xl bg-gradient-to-r from-destructive/30 to-warning/30 mb-20 max-w-5xl mx-auto">
-            <div className="glass-card p-10 rounded-3xl bg-background/95 backdrop-blur-xl">
-              <h3 className="text-2xl font-bold mb-8 text-center">{t.painPoints.title}</h3>
-              <div className="flex flex-wrap justify-center gap-6">
-                {t.painPoints.points.map((point, index) => (
-                  <div key={index} className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-gradient-to-br from-destructive/5 to-warning/5 border border-destructive/20 hover:border-destructive/40 transition-all duration-500 hover:scale-105 group">
-                    <div className="p-2 rounded-lg bg-destructive/10 group-hover:bg-destructive/20 transition-colors">
-                      <point.icon className="w-6 h-6 text-destructive" />
-                    </div>
-                    <span className="text-base font-medium">{point.text}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Pain Points Banner */}
+          <div className="healit-card p-8 mb-16 max-w-5xl mx-auto bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30 border-rose-200 dark:border-rose-800/30">
+            <h3 className="text-xl font-bold mb-6 text-center text-slate-700 dark:text-slate-200">{t.painPoints.title}</h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {t.painPoints.points.map((point, index) => (
+                <div key={index} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-rose-200 dark:border-rose-800/50">
+                  <point.icon className="w-5 h-5 text-rose-500" />
+                  <span className="font-medium text-slate-700 dark:text-slate-200">{point.text}</span>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {t.features.items.map((feature, index) => (
-              <div
-                key={index}
-                className="group relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-success/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative glass-card-hover p-8 rounded-3xl h-full border-2 border-transparent group-hover:border-primary/20 transition-all duration-500">
-                  <div className="relative mb-6">
-                    <div className={`absolute inset-0 ${feature.bgColor} rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-500`}></div>
-                    <div className={`relative w-16 h-16 rounded-2xl ${feature.bgColor} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                      <feature.icon className={`w-8 h-8 ${feature.color}`} />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
-                  <p className="text-base text-muted-foreground/80 leading-relaxed">{feature.description}</p>
+              <div key={index} className="healit-card p-6 group">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center mb-5 shadow-lg shadow-teal-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <feature.icon className="w-7 h-7 text-white" />
                 </div>
+                <h3 className="text-lg font-bold mb-3 text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
@@ -411,33 +389,27 @@ export default function HealIT() {
       </section>
 
       {/* Workflow Section */}
-      <section className="py-32 relative bg-gradient-to-b from-secondary/20 to-background">
-        <div className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px',
-          }}
-        />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+      <section className="py-24 bg-gradient-to-b from-teal-50/50 to-white dark:from-slate-900 dark:to-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-slate-800 dark:text-white">
               {t.workflow.title}
             </h2>
           </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {t.workflow.steps.map((step, index) => (
-                <div key={index} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-success/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative glass-card p-10 rounded-3xl border-2 border-transparent group-hover:border-primary/20 transition-all duration-500 hover:scale-105">
-                    <div className="absolute top-8 right-8 w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-success/20 flex items-center justify-center border border-primary/30 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                      <span className="text-3xl font-bold bg-gradient-to-br from-primary to-success bg-clip-text text-transparent">{step.number}</span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4 pr-20 group-hover:text-primary transition-colors">{step.title}</h3>
-                    <p className="text-base text-muted-foreground/80 leading-relaxed">{step.description}</p>
+                <div key={index} className="healit-card p-8 group relative">
+                  <div className="absolute top-6 end-6 w-12 h-12 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
+                    <span className="text-xl font-bold text-white">{step.number}</span>
                   </div>
+                  <h3 className="text-xl font-bold mb-3 pe-16 text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -446,62 +418,63 @@ export default function HealIT() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-success/10" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-to-br from-primary/20 to-success/20 rounded-full blur-3xl opacity-50 animate-pulse" style={{ animationDuration: '12s' }} />
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-cyan-600" />
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 0h10v25h25v10H35v25H25V35H0V25h25V0z' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E")`,
+            backgroundSize: '80px 80px',
+          }}
+        />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="relative p-1 rounded-[3rem] bg-gradient-to-r from-primary/40 via-success/40 to-primary/40 max-w-5xl mx-auto">
-            <div className="glass-card p-16 md:p-20 rounded-[3rem] text-center bg-background/95 backdrop-blur-xl">
-              <div className="relative inline-flex items-center justify-center mb-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-success rounded-3xl blur-2xl opacity-30 animate-pulse" style={{ animationDuration: '6s' }}></div>
-                <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-primary/20 to-success/20 flex items-center justify-center border-2 border-primary/30">
-                  <Stethoscope className="w-10 h-10 text-primary" />
-                </div>
-              </div>
-
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-                {t.cta2.title}
-              </h2>
-
-              <p className="text-xl md:text-2xl text-muted-foreground/70 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
-                {t.cta2.subtitle}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
-                {t.cta2.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-gradient-to-br from-success/5 to-primary/5 border border-success/20 hover:border-success/40 transition-all duration-500 hover:scale-105 group">
-                    <div className="p-1.5 rounded-lg bg-success/10 group-hover:bg-success/20 transition-colors">
-                      <CheckCircle className="w-5 h-5 text-success" />
-                    </div>
-                    <span className="text-sm font-semibold">{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-10">
-                <Link to="/signup">
-                  <Button variant="hero" size="xl" className="shadow-2xl shadow-primary/30 hover:shadow-primary/40 transition-all duration-500 hover:scale-110">
-                    {t.cta2.button}
-                    <Arrow className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-                <Link to="/contact">
-                  <Button variant="heroOutline" size="xl" className="backdrop-blur-sm hover:bg-secondary/50 transition-all duration-500 hover:scale-110">
-                    {t.cta2.secondary}
-                  </Button>
-                </Link>
-              </div>
-
-              <p className="text-sm text-muted-foreground/60 font-light">
-                {t.cta2.footer}
-              </p>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm mb-8">
+              <Heart className="w-10 h-10 text-white" />
             </div>
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+              {t.cta2.title}
+            </h2>
+
+            <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+              {t.cta2.subtitle}
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              {t.cta2.features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
+                  <CheckCircle className="w-4 h-4" />
+                  {feature}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <Link to="/signup">
+                <Button className="text-lg px-8 py-6 h-auto bg-white text-teal-600 hover:bg-white/90 shadow-xl shadow-black/20">
+                  {t.cta2.button}
+                  <Arrow className="w-5 h-5 ms-2" />
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button 
+                  variant="outline" 
+                  className="text-lg px-8 py-6 h-auto border-2 border-white/50 text-white hover:bg-white/10"
+                >
+                  {t.cta2.secondary}
+                </Button>
+              </Link>
+            </div>
+
+            <p className="text-white/60 text-sm">
+              {t.cta2.footer}
+            </p>
           </div>
         </div>
       </section>
 
-      <Footer />
+      <HealITFooter />
     </div>
   );
 }
