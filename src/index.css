@@ -236,3 +236,144 @@
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
+
+/* ========================================
+   ACCESSIBILITY STYLES (Israeli Standards)
+   ======================================== */
+
+/* Font Size Adjustments */
+.a11y-font-normal {
+  font-size: 100%;
+}
+
+.a11y-font-large {
+  font-size: 118%;
+}
+
+.a11y-font-xlarge {
+  font-size: 135%;
+}
+
+/* High Contrast Mode */
+.a11y-high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --primary: 60 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 85%;
+  --border: 0 0% 40%;
+}
+
+.a11y-high-contrast.light {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --primary: 240 100% 25%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 0 0% 90%;
+  --muted-foreground: 0 0% 20%;
+  --border: 0 0% 30%;
+}
+
+/* Reduced Motion */
+.a11y-reduced-motion,
+.a11y-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Link Highlight */
+.a11y-link-highlight a:not(.no-a11y-highlight) {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  outline: 2px solid transparent;
+}
+
+.a11y-link-highlight a:not(.no-a11y-highlight):focus,
+.a11y-link-highlight a:not(.no-a11y-highlight):hover {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* ========================================
+   HEALIT SPECIFIC STYLES
+   ======================================== */
+
+.healit-page {
+  --healit-primary: 174 62% 47%;
+  --healit-secondary: 187 77% 52%;
+  --healit-accent: 174 100% 29%;
+}
+
+.healit-page.light {
+  background: linear-gradient(180deg, hsl(180 20% 98%) 0%, hsl(180 15% 96%) 100%);
+}
+
+.healit-page.dark {
+  background: linear-gradient(180deg, hsl(215 28% 10%) 0%, hsl(215 35% 6%) 100%);
+}
+
+.healit-gradient-text {
+  background: linear-gradient(135deg, hsl(174 62% 47%) 0%, hsl(187 77% 52%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.healit-card {
+  @apply rounded-2xl border transition-all duration-300;
+  background: linear-gradient(145deg, hsl(180 20% 99% / 0.8) 0%, hsl(180 15% 97% / 0.9) 100%);
+  border-color: hsl(174 30% 85%);
+  box-shadow: 0 4px 20px -4px hsl(174 40% 30% / 0.1);
+}
+
+.dark .healit-card {
+  background: linear-gradient(145deg, hsl(215 30% 15% / 0.9) 0%, hsl(215 35% 12% / 0.95) 100%);
+  border-color: hsl(174 40% 25% / 0.3);
+  box-shadow: 0 4px 20px -4px hsl(174 40% 20% / 0.2);
+}
+
+.healit-card:hover {
+  border-color: hsl(174 50% 50% / 0.5);
+  box-shadow: 0 8px 30px -8px hsl(174 50% 40% / 0.2);
+  transform: translateY(-2px);
+}
+
+.healit-btn-primary {
+  @apply font-semibold px-6 py-3 rounded-xl transition-all duration-300;
+  background: linear-gradient(135deg, hsl(174 62% 47%) 0%, hsl(187 77% 52%) 100%);
+  color: white;
+  box-shadow: 0 4px 14px -2px hsl(174 60% 40% / 0.4);
+}
+
+.healit-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px hsl(174 60% 40% / 0.5);
+}
+
+.healit-glow {
+  position: relative;
+}
+
+.healit-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, hsl(174 62% 47% / 0.3) 0%, hsl(187 77% 52% / 0.3) 100%);
+  border-radius: inherit;
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.healit-glow:hover::before {
+  opacity: 1;
+}
