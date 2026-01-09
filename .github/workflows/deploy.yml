@@ -1,0 +1,183 @@
+name: Deploy with Environment Approval
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # Required for OIDC
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false # Don't cancel production deployments
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test --if-present
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-dist
+          path: dist/
+          retention-days: 7
+
+  # Deploy to Staging (automatic)
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: staging
+      url: https://staging.yourdomain.com # Update with your staging URL
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-dist
+          path: dist/
+
+      - name: Configure AWS Credentials (OIDC)
+        if: vars.USE_AWS == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+          # No long-lived keys needed! OIDC provides short-lived tokens
+
+      - name: Deploy to Staging (AWS S3 Example)
+        if: vars.USE_AWS == 'true'
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_STAGING_BUCKET }} --delete
+          # Invalidate CloudFront if needed
+          if [ -n "${{ secrets.CLOUDFRONT_STAGING_ID }}" ]; then
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ secrets.CLOUDFRONT_STAGING_ID }} \
+              --paths "/*"
+          fi
+
+      - name: Configure GCP Credentials (OIDC)
+        if: vars.USE_GCP == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Staging (GCP Cloud Storage Example)
+        if: vars.USE_GCP == 'true'
+        run: |
+          gcloud storage rsync dist/ gs://${{ secrets.GCS_STAGING_BUCKET }} --delete-unmatched-destination-objects
+
+      - name: Configure Azure Credentials (OIDC)
+        if: vars.USE_AZURE == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Staging (Azure Storage Example)
+        if: vars.USE_AZURE == 'true'
+        run: |
+          az storage blob sync \
+            --source dist/ \
+            --container ${{ secrets.AZURE_STAGING_CONTAINER }} \
+            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+
+      - name: Staging deployment complete
+        run: |
+          echo "✅ Staging deployment successful"
+          echo "URL: ${{ vars.STAGING_URL || 'https://staging.yourdomain.com' }}"
+
+  # Deploy to Production (requires approval)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment:
+      name: production
+      url: https://yourdomain.com # Update with your production URL
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-dist
+          path: dist/
+
+      - name: Configure AWS Credentials (OIDC)
+        if: vars.USE_AWS == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+
+      - name: Deploy to Production (AWS S3)
+        if: vars.USE_AWS == 'true'
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_PRODUCTION_BUCKET }} --delete
+          # Invalidate CloudFront cache
+          if [ -n "${{ secrets.CLOUDFRONT_PRODUCTION_ID }}" ]; then
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ secrets.CLOUDFRONT_PRODUCTION_ID }} \
+              --paths "/*"
+          fi
+
+      - name: Configure GCP Credentials (OIDC)
+        if: vars.USE_GCP == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Production (GCP Cloud Storage)
+        if: vars.USE_GCP == 'true'
+        run: |
+          gcloud storage rsync dist/ gs://${{ secrets.GCS_PRODUCTION_BUCKET }} --delete-unmatched-destination-objects
+
+      - name: Configure Azure Credentials (OIDC)
+        if: vars.USE_AZURE == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Production (Azure Storage)
+        if: vars.USE_AZURE == 'true'
+        run: |
+          az storage blob sync \
+            --source dist/ \
+            --container ${{ secrets.AZURE_PRODUCTION_CONTAINER }} \
+            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+
+      - name: Production deployment complete
+        run: |
+          echo "🚀 Production deployment successful"
+          echo "URL: ${{ vars.PRODUCTION_URL || 'https://yourdomain.com' }}"
+
+      - name: Create deployment tag
+        run: |
+          git tag "deploy-$(date +%Y%m%d-%H%M%S)"
+          git push origin --tags
+        continue-on-error: true
