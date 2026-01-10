@@ -10,22 +10,30 @@ import {
   Shield, 
   Eye, 
   UserCheck, 
-  BarChart3, 
   Clock, 
   AlertCircle, 
-  ClipboardCheck,
   CheckCircle,
-  FileCheck,
   AlertTriangle,
-  Calendar,
   FileText,
   Stethoscope,
   Bell,
   Users,
-  TrendingUp,
   Heart,
   Activity,
-  Sparkles
+  Sparkles,
+  Brain,
+  Target,
+  XCircle,
+  RefreshCw,
+  Lightbulb,
+  MessageCircle,
+  ShieldCheck,
+  Zap,
+  ListChecks,
+  Timer,
+  UserX,
+  Workflow,
+  CircleDot
 } from 'lucide-react';
 
 export default function HealIT() {
@@ -35,203 +43,283 @@ export default function HealIT() {
 
   const content = {
     he: {
-      badge: 'AI קליני + ניהול תורים',
-      title: 'המערכת שרופאים צריכים: תיעוד חכם וניהול תורים במקום אחד',
-      subtitle: 'תיעוד רפואי מהיר עם AI, תזכורות אוטומטיות לחולים, וניהול תורים חכם. הכל במערכת אחת.',
+      badge: 'עוזר AI קליני',
+      heroTitle: 'עוזר שלא מאבחן',
+      heroHighlight: 'אבל כן מציל מהרגעים שבין השורות',
+      heroSubtitle: 'יש רגעים ברפואה שבהם הכול "נעשה נכון" — ובכל זאת משהו משתבש. הבדיקה נשלחה. ההפניה יצאה. ההמלצה נכתבה יפה. ואז מגיע החלק שבו רוב המערכות מתפטרות מהחיים: אחרי שהרופא סיים להקליד.',
       cta: 'התחילו בחינם',
       secondary: 'קבעו הדגמה',
-      trustPoints: [
-        { icon: FileText, text: 'תיעוד מהיר פי 3' },
-        { icon: Calendar, text: 'ניהול תורים אוטומטי' },
-        { icon: Bell, text: 'תזכורות חכמות' },
-      ],
-      visualFlow: {
-        input: 'ביקור חולה',
-        process: 'תיעוד + תזמון',
-        output: 'מעקב מלא',
+      
+      problemSection: {
+        title: 'רפואה אמיתית לא נגמרת בהחלטה. היא מתחילה שם.',
+        subtitle: 'ומה שמפיל מערכות זה לא החלטות גרועות. זה יישום לא עקבי, מעקב שנשכח, וזמן שעובר בלי שאף אחד שם לב.',
+        items: [
+          { icon: Clock, text: 'שישה ימים עברו — ואין תור' },
+          { icon: FileText, text: 'שבועיים עברו — ואין פענוח' },
+          { icon: AlertTriangle, text: 'חודש עבר — ואין ביקורת' },
+        ],
+        footer: 'אין פה "באג" שמצלצל. יש פה חוסר תנועה.',
       },
-      features: {
-        title: 'מערכת אחת לכל תהליך הטיפול',
-        subtitle: 'מהרגע שהחולה נכנס ועד המעקב הבא',
+      
+      solutionIntro: {
+        title: 'כאן נכנס עוזר מבוסס בינה מלאכותית',
+        subtitle: 'לא כתחליף לרופא, לא כ"דוקטור רובוט", ולא כמכונה שמחלקת אבחנות — אלא כמשהו הרבה פחות סקסי והרבה יותר חשוב:',
+        highlight: 'שומר סף של מעקב',
+        description: 'הוא לא אומר מה יש למטופל. הוא שואל: מה אמרת שצריך לקרות עכשיו — והאם זה באמת קרה?',
+      },
+      
+      whatItDoes: {
+        title: 'מה העוזר כן עושה',
+        subtitle: 'תחשוב על הקליניקה כמפעל קטן שמייצר החלטות. החלטות הן קלות. המורכב הוא "המסירה" — לוודא שההחלטות פוגשות מציאות.',
         items: [
           {
-            icon: FileText,
-            title: 'תיעוד רפואי חכם',
-            description: 'AI כותב את התיעוד הרפואי בזמן אמת מדיבור או טקסט חופשי. אתם רק מאשרים ומשלימים.',
+            icon: Workflow,
+            title: 'קורא הוראות כרצף, לא כטקסט',
+            description: '"הפניה לקרדיולוג" זה לא שורה. זה התחייבות תהליכית.',
+            details: 'נשלחה הפניה → צריך תור → צריך ביקור → צריך תוצאה/סיכום → צריך החלטה חוזרת.',
           },
           {
-            icon: Calendar,
-            title: 'תזמון תורים אוטומטי',
-            description: 'המערכת מזהה צורך במעקב ומציעה תאריכים אופטימליים. חולים מזמינים בלינק או בטלפון.',
+            icon: Eye,
+            title: 'מזהה "אי־אירועים"',
+            description: 'האירוע הכי מסוכן ברפואה הוא לא טעות דרמטית. הוא שקט.',
+            details: 'הדבר הזה אמור היה לקרות. הוא לא קרה.',
           },
           {
-            icon: Bell,
-            title: 'תזכורות חכמות',
-            description: 'תזכורות אוטומטיות לחולים (SMS/WhatsApp), תזכורות לרופאים על ממצאים שדורשים מעקב.',
-          },
-          {
-            icon: Users,
-            title: 'מעקב אחר חולים',
-            description: 'רשימת מעקב חכמה: מיהו בסיכון, מי לא הגיע למעקב, אילו בדיקות חסרות. בעדיפות קלינית.',
-          },
-          {
-            icon: Stethoscope,
-            title: 'חיבור לכללית/מכבי',
-            description: 'קריאה אוטומטית של תוצאות מעבדה, מכתבי הפניה ואבחנות מהקופות. בזמן אמת.',
-          },
-          {
-            icon: TrendingUp,
-            title: 'ניתוח מגמות',
-            description: 'זיהוי אוטומטי של ממצאים מחמירים לאורך זמן (למשל: קריאטינין עולה, HbA1c לא משתפר).',
+            icon: Target,
+            title: 'יודע למי להציק, ומתי להפסיק',
+            description: 'מנתב משימות לפי תפקידים: לרופא, לאחות, למזכירות, לתיאום תורים, למטופל.',
+            details: 'ובדיוק כמו אדם אחראי, הוא גם יודע לרדת מהנושא כשהמשימה הושלמה.',
           },
         ],
       },
-      painPoints: {
-        title: 'רופאים לא צריכים עוד מערכת. הם צריכים זמן.',
+      
+      whatItDoesNot: {
+        title: 'מה העוזר לא עושה',
+        subtitle: 'כי זה חשוב יותר ממה שהוא כן עושה',
+        items: [
+          { icon: XCircle, text: 'הוא לא מאבחן' },
+          { icon: XCircle, text: 'הוא לא "קובע"' },
+          { icon: XCircle, text: 'הוא לא משחק אותה סמכות רפואית' },
+        ],
+        example: {
+          wrong: '"זה כנראה דלקת ריאות."',
+          right: '"הייתה הוראה לצילום, עבר זמן, אין תוצאה מתועדת — האם צריך לבדוק סטטוס?"',
+        },
+        conclusion: 'הוא לא נוגע בשיקול הדעת. הוא נוגע בעקביות. וזה בדיוק המקום שבו בינה מלאכותית יכולה להיות לא מפחידה, אלא מרגיעה: היא לא מתחרה ברופא — היא מגינה עליו מפני העומס.',
+      },
+      
+      whyItWorks: {
+        title: 'למה זה עובד בעולם האמיתי',
+        subtitle: 'ולא רק במצגות',
+        description: 'בכל קליניקה יש "איש/אשת קסם" שמחזיקים הכול בראש: מי צריך לחזור למי, מי לא קבע תור, מי מחכה לתוצאה, מי צריך עוד הפניה, מי כועס, מי נעלם.',
+        problem: 'ואז אותו אדם יוצא לחופשה, חולה, או פשוט נשבר.',
+        highlight: 'מערכת שמבוססת על זיכרון אנושי היא מערכת שמבקשת להיכשל.',
+        solution: 'העוזר עושה משהו צנוע: הוא מפסיק לדרוש מהאדם להיות מחשב.',
+      },
+      
+      adhdSection: {
+        title: 'אותו עיקרון בדיוק: ADHD וארגון חיים',
+        intro: 'אם אתה מכיר ADHD מקרוב, אתה כבר יודע את האמת המביכה: הבעיה היא לא אינטליגנציה. הבעיה היא ביצוע עקבי של דברים קטנים בזמן הנכון.',
+        problems: [
+          'לשלם בזמן',
+          'לזכור להתקשר',
+          'לקבוע',
+          'לשלוח',
+          'לעקוב',
+          'לסגור קצוות',
+          'לא לאבד את הפעולה הבאה בתוך 17 טאבים פתוחים בראש',
+        ],
+        insight: 'הרבה "מיקרו־משימות" שכולן קריטיות, אבל אף אחת לא מרגישה דחופה ברגע הזה.',
+        solutions: [
+          {
+            icon: RefreshCw,
+            title: 'לתרגם כוונות לפעולות',
+            description: '"אני חייב לקבוע תור לרופא שיניים" → פעולה + דדליין + תזכורת + מסלול ביצוע.',
+          },
+          {
+            icon: Zap,
+            title: 'לצמצם חיכוך',
+            description: 'אם כל משימה דורשת 12 שלבים, היא לא תקרה. העוזר מציע את "השלב הבא הכי קטן".',
+          },
+          {
+            icon: ListChecks,
+            title: 'לסגור לולאות',
+            description: 'ADHD זה הרבה פעמים לולאות פתוחות שמייצרות אשמה. העוזר שואל: מה נשאר פתוח?',
+          },
+        ],
+      },
+      
+      connection: {
+        title: 'רפואה ו-ADHD זה אותו סיפור — רק עם סיכון אחר',
+        cards: [
+          { context: 'ברפואה', impact: 'חוסר ארגון עולה בבריאות' },
+          { context: 'ב-ADHD', impact: 'חוסר ארגון עולה בחיים' },
+        ],
+        insight: 'בשני המקרים, הבעיה היא לא שאנשים לא יודעים מה נכון. הבעיה היא שהמערכת לא בנויה לבצע את זה בהתמדה.',
+        misconceptions: [
+          '"הוא לא רציני."',
+          '"היא לא אחראית."',
+          '"הוא לא משתף פעולה."',
+        ],
+        truth: 'הם פשוט בני אדם בתוך מערכת שלא מכבדת את המגבלות האנושיות.',
+      },
+      
+      bottomLine: {
+        title: 'השורה התחתונה',
         points: [
-          { icon: Clock, text: '2 שעות ביום על תיעוד ומילוי טפסים' },
-          { icon: AlertCircle, text: 'חולים שנופלים מהמעקב' },
-          { icon: ClipboardCheck, text: 'ניהול תורים ידני ותזכורות באקסל' },
+          'בינה מלאכותית לא צריכה להיות רופא כדי לשפר רפואה.',
+          'היא צריכה להיות זיכרון חיצוני עם טקט.',
+          'היא לא מחליפה החלטה קלינית.',
+          'היא שומרת שהחלטה קלינית לא תתאדה בין ימים, משמרות, הודעות, וחיים.',
         ],
+        tagline: 'פחות קסם. יותר מעקב. וזה בדיוק מה שמציל.',
       },
-      workflow: {
-        title: 'איך זה עובד בפועל',
-        steps: [
-          {
-            number: '1',
-            title: 'במהלך הביקור',
-            description: 'תקליטו או תכתבו בטקסט חופשי. AI יוצר תיעוד מובנה: תלונות, בדיקה, אבחנה, טיפול.',
-          },
-          {
-            number: '2',
-            title: 'סיום הביקור',
-            description: 'אתם מאשרים את התיעוד. המערכת מציעה אוטומטית מועד למעקב (אם נדרש) והחולה מקבל לינק לתיאום.',
-          },
-          {
-            number: '3',
-            title: 'מעקב אוטומטי',
-            description: 'תזכורות לחולה לפני התור. תזכורות לכם על ממצאים שדורשים תשומת לב. בעדיפות קלינית.',
-          },
-          {
-            number: '4',
-            title: 'ניתוח רציף',
-            description: 'המערכת עוקבת אחר תוצאות מעבדה מהקופות, מזהה מגמות מדאיגות ומתריעה לפני החמרה.',
-          },
-        ],
-      },
+      
       cta2: {
-        title: 'תפסיקו לבזבז זמן על מערכות. התחילו לטפל בחולים.',
-        subtitle: 'הצטרפו לרופאים שכבר חוסכים 10+ שעות שבועיות ומטפלים טוב יותר',
+        title: 'מוכנים לעזור למערכת שלכם לזכור?',
         button: 'התחילו תקופת ניסיון חינם',
         secondary: 'קבעו הדגמה',
         footer: 'ללא כרטיס אשראי • התחלה תוך דקות • ביטול בכל עת',
-        features: [
-          'תיעוד אוטומטי עם AI',
-          'ניהול תורים מלא',
-          'תזכורות אוטומטיות',
-          'חיבור לקופות חולים',
-          'מעקב אחר חולים בסיכון',
-        ],
       },
     },
     en: {
-      badge: 'Clinical AI + Scheduling',
-      title: 'The System Doctors Actually Need: Smart Documentation & Appointment Management',
-      subtitle: 'AI-powered medical notes, automated patient reminders, and intelligent scheduling. All in one system.',
+      badge: 'Clinical AI Assistant',
+      heroTitle: "An Assistant That Doesn't Diagnose",
+      heroHighlight: 'But Saves You from the Moments Between the Lines',
+      heroSubtitle: 'There are moments in medicine when everything is "done right" — and yet something goes wrong. The test was sent. The referral was made. The recommendation was written beautifully. Then comes the part where most systems check out: after the doctor finishes typing.',
       cta: 'Start Free Trial',
       secondary: 'Schedule Demo',
-      trustPoints: [
-        { icon: FileText, text: '3× Faster Documentation' },
-        { icon: Calendar, text: 'Automated Scheduling' },
-        { icon: Bell, text: 'Smart Reminders' },
-      ],
-      visualFlow: {
-        input: 'Patient Visit',
-        process: 'Document + Schedule',
-        output: 'Complete Follow-up',
+      
+      problemSection: {
+        title: "Real medicine doesn't end with a decision. It starts there.",
+        subtitle: "What brings systems down isn't bad decisions. It's inconsistent implementation, forgotten follow-ups, and time passing without anyone noticing.",
+        items: [
+          { icon: Clock, text: 'Six days passed — no appointment scheduled' },
+          { icon: FileText, text: 'Two weeks passed — no results interpreted' },
+          { icon: AlertTriangle, text: 'A month passed — no review done' },
+        ],
+        footer: 'No alarm bells. Just stillness.',
       },
-      features: {
-        title: 'One System for the Entire Care Journey',
-        subtitle: 'From the moment a patient walks in until the next follow-up',
+      
+      solutionIntro: {
+        title: 'Enter an AI-powered assistant',
+        subtitle: 'Not as a substitute for a doctor, not as a "robot doctor," not as a machine dispensing diagnoses — but as something far less glamorous and far more important:',
+        highlight: 'A follow-up gatekeeper',
+        description: "It doesn't tell you what the patient has. It asks: what did you say needs to happen now — and did it actually happen?",
+      },
+      
+      whatItDoes: {
+        title: 'What the Assistant Actually Does',
+        subtitle: 'Think of the clinic as a small factory producing decisions. Decisions are easy. The hard part is "delivery" — ensuring decisions meet reality.',
         items: [
           {
-            icon: FileText,
-            title: 'Smart Medical Documentation',
-            description: 'AI writes clinical notes in real-time from speech or free text. You just review and approve.',
+            icon: Workflow,
+            title: 'Reads instructions as sequences, not text',
+            description: '"Referral to cardiologist" isn\'t a line. It\'s a process commitment.',
+            details: 'Referral sent → appointment needed → visit → result/summary → follow-up decision.',
           },
           {
-            icon: Calendar,
-            title: 'Automated Appointment Scheduling',
-            description: 'System detects follow-up needs and suggests optimal dates. Patients book via link or phone.',
+            icon: Eye,
+            title: 'Identifies "non-events"',
+            description: "The most dangerous event in medicine isn't a dramatic mistake. It's silence.",
+            details: "This was supposed to happen. It didn't.",
           },
           {
-            icon: Bell,
-            title: 'Smart Reminders',
-            description: 'Automated patient reminders (SMS/WhatsApp), physician alerts for findings requiring follow-up.',
-          },
-          {
-            icon: Users,
-            title: 'Patient Tracking',
-            description: 'Smart tracking list: who\'s at risk, who missed follow-up, which tests are missing. Prioritized clinically.',
-          },
-          {
-            icon: Stethoscope,
-            title: 'HMO Integration',
-            description: 'Automatic retrieval of lab results, referral letters, and diagnoses from Kupot Holim. Real-time.',
-          },
-          {
-            icon: TrendingUp,
-            title: 'Trend Analysis',
-            description: 'Automatic detection of worsening findings over time (e.g., rising creatinine, unimproved HbA1c).',
+            icon: Target,
+            title: 'Knows who to nudge, and when to stop',
+            description: 'Routes tasks by role: to the doctor, nurse, secretary, scheduling, patient.',
+            details: "And like a responsible person, it also knows when to drop the subject once the task is complete.",
           },
         ],
       },
-      painPoints: {
-        title: 'Doctors don\'t need another system. They need time.',
+      
+      whatItDoesNot: {
+        title: "What the Assistant Doesn't Do",
+        subtitle: "Because this is more important than what it does",
+        items: [
+          { icon: XCircle, text: "It doesn't diagnose" },
+          { icon: XCircle, text: 'It doesn\'t "decide"' },
+          { icon: XCircle, text: "It doesn't pretend to be a medical authority" },
+        ],
+        example: {
+          wrong: '"It\'s probably pneumonia."',
+          right: '"There was an order for an X-ray, time has passed, no documented result — should we check status?"',
+        },
+        conclusion: "It doesn't touch clinical judgment. It touches consistency. And that's exactly where AI can be not scary, but reassuring: it doesn't compete with the doctor — it protects them from overload.",
+      },
+      
+      whyItWorks: {
+        title: 'Why This Works in the Real World',
+        subtitle: 'Not just in presentations',
+        description: 'Every clinic has a "magic person" who keeps everything in their head: who needs to follow up with whom, who didn\'t schedule an appointment, who\'s waiting for results, who needs another referral, who\'s angry, who disappeared.',
+        problem: 'Then that person goes on vacation, gets sick, or simply burns out.',
+        highlight: 'A system based on human memory is a system asking to fail.',
+        solution: "The assistant does something modest: it stops demanding that humans be computers.",
+      },
+      
+      adhdSection: {
+        title: 'The Same Principle: ADHD and Life Organization',
+        intro: "If you know ADHD up close, you already know the embarrassing truth: the problem isn't intelligence. The problem is consistent execution of small things at the right time.",
+        problems: [
+          'Pay on time',
+          'Remember to call',
+          'Schedule',
+          'Send',
+          'Follow up',
+          'Close loops',
+          "Not lose the next action among 17 open tabs in your head",
+        ],
+        insight: 'Many "micro-tasks" that are all critical, but none feel urgent right now.',
+        solutions: [
+          {
+            icon: RefreshCw,
+            title: 'Translate intentions to actions',
+            description: '"I need to schedule a dentist appointment" → action + deadline + reminder + execution path.',
+          },
+          {
+            icon: Zap,
+            title: 'Reduce friction',
+            description: "If every task requires 12 steps, it won't happen. The assistant suggests the smallest next step.",
+          },
+          {
+            icon: ListChecks,
+            title: 'Close loops',
+            description: 'ADHD often means open loops generating guilt. The assistant asks: what\'s left open?',
+          },
+        ],
+      },
+      
+      connection: {
+        title: "Medicine and ADHD Are the Same Story — Just Different Stakes",
+        cards: [
+          { context: 'In medicine', impact: 'disorganization costs health' },
+          { context: 'In ADHD', impact: 'disorganization costs life' },
+        ],
+        insight: "In both cases, the problem isn't that people don't know what's right. The problem is the system isn't built to execute it consistently.",
+        misconceptions: [
+          '"He\'s not serious."',
+          '"She\'s not responsible."',
+          '"He\'s not cooperating."',
+        ],
+        truth: "They're just humans inside a system that doesn't respect human limitations.",
+      },
+      
+      bottomLine: {
+        title: 'The Bottom Line',
         points: [
-          { icon: Clock, text: '2 hours/day on documentation and forms' },
-          { icon: AlertCircle, text: 'Patients falling through the cracks' },
-          { icon: ClipboardCheck, text: 'Manual scheduling and Excel reminders' },
+          "AI doesn't need to be a doctor to improve medicine.",
+          'It needs to be an external memory with tact.',
+          "It doesn't replace clinical decisions.",
+          "It ensures clinical decisions don't evaporate between days, shifts, messages, and life.",
         ],
+        tagline: "Less magic. More follow-through. And that's exactly what saves.",
       },
-      workflow: {
-        title: 'How It Works in Practice',
-        steps: [
-          {
-            number: '1',
-            title: 'During the Visit',
-            description: 'Record or type in free text. AI generates structured documentation: complaints, examination, diagnosis, treatment.',
-          },
-          {
-            number: '2',
-            title: 'End of Visit',
-            description: 'You approve the documentation. System automatically suggests follow-up date (if needed) and patient receives booking link.',
-          },
-          {
-            number: '3',
-            title: 'Automated Follow-up',
-            description: 'Reminders to patient before appointment. Reminders to you about findings requiring attention. Clinically prioritized.',
-          },
-          {
-            number: '4',
-            title: 'Continuous Analysis',
-            description: 'System monitors lab results from HMOs, identifies worrying trends, and alerts before deterioration.',
-          },
-        ],
-      },
+      
       cta2: {
-        title: 'Stop Wasting Time on Systems. Start Treating Patients.',
-        subtitle: 'Join doctors already saving 10+ hours weekly and providing better care',
+        title: 'Ready to help your system remember?',
         button: 'Start Free Trial',
         secondary: 'Schedule Demo',
         footer: 'No credit card required • Start in minutes • Cancel anytime',
-        features: [
-          'Automated documentation with AI',
-          'Complete scheduling management',
-          'Automated reminders',
-          'HMO integration',
-          'High-risk patient tracking',
-        ],
       },
     },
   };
@@ -242,48 +330,32 @@ export default function HealIT() {
     <div className={`healit-page min-h-screen flex flex-col ${theme}`}>
       <HealITHeader />
       
-      {/* Hero Section - Completely Different Medical Theme */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        {/* Soft medical gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-cyan-50/50 to-white dark:from-slate-900 dark:via-teal-950/30 dark:to-slate-950" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-teal-50/30 to-cyan-50/20 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20" />
         
-        {/* Floating medical symbols */}
-        <div className="absolute top-1/4 left-[10%] w-64 h-64 rounded-full bg-teal-200/30 dark:bg-teal-500/10 blur-3xl" />
-        <div className="absolute bottom-1/4 right-[10%] w-80 h-80 rounded-full bg-cyan-200/30 dark:bg-cyan-500/10 blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-emerald-200/20 dark:bg-emerald-500/10 blur-2xl" />
+        <div className="absolute top-1/4 left-[5%] w-96 h-96 rounded-full bg-teal-200/20 dark:bg-teal-500/5 blur-3xl" />
+        <div className="absolute bottom-1/4 right-[5%] w-80 h-80 rounded-full bg-cyan-200/20 dark:bg-cyan-500/5 blur-3xl" />
         
-        {/* Decorative cross pattern */}
-        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 0h10v25h25v10H35v25H25V35H0V25h25V0z' fill='%230d9488' fill-opacity='0.5'/%3E%3C/svg%3E")`,
-            backgroundSize: '120px 120px',
-          }}
-        />
-
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            {/* Badge */}
+          <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-teal-200 dark:border-teal-700/50 shadow-lg shadow-teal-500/10 mb-10">
-              <Heart className="w-5 h-5 text-teal-500" />
+              <Brain className="w-5 h-5 text-teal-500" />
               <span className="font-semibold text-teal-700 dark:text-teal-300">{t.badge}</span>
-              <Sparkles className="w-4 h-4 text-cyan-500" />
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight text-slate-800 dark:text-white">
-              {t.title.split(':')[0]}:
-              <span className="block mt-2 healit-gradient-text">
-                {t.title.split(':')[1]}
-              </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight text-slate-800 dark:text-white">
+              {t.heroTitle}
             </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              {t.subtitle}
+            <p className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 healit-gradient-text">
+              {t.heroHighlight}
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+              {t.heroSubtitle}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/signup">
                 <Button className="healit-btn-primary text-lg px-8 py-6 h-auto">
                   {t.cta}
@@ -299,119 +371,306 @@ export default function HealIT() {
                 </Button>
               </Link>
             </div>
-
-            {/* Trust Points */}
-            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-16">
-              {t.trustPoints.map((point, index) => (
-                <div key={index} className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-teal-100 dark:border-teal-800/50 shadow-sm">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-400 text-white">
-                    <point.icon className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium text-slate-700 dark:text-slate-200">{point.text}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Visual Flow Card */}
-            <div className="healit-card p-8 md:p-12 max-w-4xl mx-auto healit-glow">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                <div className="flex flex-col items-center gap-3 group">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:scale-110 transition-transform">
-                    <Users className="w-10 h-10 text-white" />
-                  </div>
-                  <span className="font-semibold text-slate-600 dark:text-slate-300">{t.visualFlow.input}</span>
-                </div>
-
-                <div className="hidden md:flex flex-1 items-center gap-3">
-                  <div className="flex-1 h-1 bg-gradient-to-r from-cyan-200 via-teal-300 to-emerald-200 dark:from-cyan-800 dark:via-teal-700 dark:to-emerald-800 rounded-full" />
-                  <div className="px-4 py-2 rounded-full bg-teal-100 dark:bg-teal-900/50 border border-teal-200 dark:border-teal-700">
-                    <span className="text-sm font-semibold text-teal-700 dark:text-teal-300">{t.visualFlow.process}</span>
-                  </div>
-                  <div className="flex-1 h-1 bg-gradient-to-r from-emerald-200 via-teal-300 to-cyan-200 dark:from-emerald-800 dark:via-teal-700 dark:to-cyan-800 rounded-full" />
-                </div>
-
-                <div className="flex flex-col items-center gap-3 group">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform">
-                    <CheckCircle className="w-10 h-10 text-white" />
-                  </div>
-                  <span className="font-semibold text-slate-600 dark:text-slate-300">{t.visualFlow.output}</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-950 to-transparent" />
       </section>
 
-      {/* Features Section */}
+      {/* Problem Section */}
       <section className="py-24 bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-slate-800 dark:text-white">
-              {t.features.title}
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-800 dark:text-white">
+              {t.problemSection.title}
             </h2>
-            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              {t.features.subtitle}
+            <p className="text-xl text-slate-600 dark:text-slate-400 mb-12">
+              {t.problemSection.subtitle}
             </p>
-          </div>
 
-          {/* Pain Points Banner */}
-          <div className="healit-card p-8 mb-16 max-w-5xl mx-auto bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30 border-rose-200 dark:border-rose-800/30">
-            <h3 className="text-xl font-bold mb-6 text-center text-slate-700 dark:text-slate-200">{t.painPoints.title}</h3>
-            <div className="flex flex-wrap justify-center gap-4">
-              {t.painPoints.points.map((point, index) => (
-                <div key={index} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-rose-200 dark:border-rose-800/50">
-                  <point.icon className="w-5 h-5 text-rose-500" />
-                  <span className="font-medium text-slate-700 dark:text-slate-200">{point.text}</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {t.problemSection.items.map((item, index) => (
+                <div key={index} className="healit-card p-6 bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30 border-rose-200 dark:border-rose-800/30">
+                  <div className="w-14 h-14 rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mx-auto mb-4">
+                    <item.icon className="w-7 h-7 text-rose-500" />
+                  </div>
+                  <p className="font-medium text-slate-700 dark:text-slate-200">{item.text}</p>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {t.features.items.map((feature, index) => (
-              <div key={index} className="healit-card p-6 group">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center mb-5 shadow-lg shadow-teal-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                  <feature.icon className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-lg font-bold mb-3 text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+            <p className="text-lg italic text-slate-500 dark:text-slate-400">
+              {t.problemSection.footer}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Workflow Section */}
+      {/* Solution Intro */}
       <section className="py-24 bg-gradient-to-b from-teal-50/50 to-white dark:from-slate-900 dark:to-slate-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-slate-800 dark:text-white">
-              {t.workflow.title}
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-800 dark:text-white">
+              {t.solutionIntro.title}
             </h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
+              {t.solutionIntro.subtitle}
+            </p>
+            
+            <div className="healit-card p-8 mb-8 healit-glow">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-teal-500/25">
+                <ShieldCheck className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 healit-gradient-text">
+                {t.solutionIntro.highlight}
+              </h3>
+              <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+                {t.solutionIntro.description}
+              </p>
+            </div>
           </div>
+        </div>
+      </section>
 
+      {/* What It Does */}
+      <section className="py-24 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {t.workflow.steps.map((step, index) => (
-                <div key={index} className="healit-card p-8 group relative">
-                  <div className="absolute top-6 end-6 w-12 h-12 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
-                    <span className="text-xl font-bold text-white">{step.number}</span>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-800 dark:text-white">
+                {t.whatItDoes.title}
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+                {t.whatItDoes.subtitle}
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {t.whatItDoes.items.map((item, index) => (
+                <div key={index} className="healit-card p-8 group">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shrink-0 shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
+                      <item.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1 text-start">
+                      <h3 className="text-xl font-bold mb-2 text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-400 mb-3">
+                        {item.description}
+                      </p>
+                      <div className="px-4 py-3 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700/50">
+                        <p className="text-sm font-medium text-teal-700 dark:text-teal-300">
+                          {item.details}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 pe-16 text-slate-800 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                    {step.title}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What It Does NOT */}
+      <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-800 dark:text-white">
+                {t.whatItDoesNot.title}
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400">
+                {t.whatItDoesNot.subtitle}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              {t.whatItDoesNot.items.map((item, index) => (
+                <div key={index} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <item.icon className="w-5 h-5 text-rose-500" />
+                  <span className="font-medium text-slate-700 dark:text-slate-200">{item.text}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              <div className="healit-card p-6 bg-gradient-to-br from-rose-50 to-rose-100/50 dark:from-rose-950/30 dark:to-rose-900/20 border-rose-200 dark:border-rose-800/30">
+                <div className="flex items-center gap-3 mb-3">
+                  <XCircle className="w-6 h-6 text-rose-500" />
+                  <span className="font-bold text-rose-600 dark:text-rose-400">{language === 'he' ? 'הוא לא אומר:' : "It doesn't say:"}</span>
+                </div>
+                <p className="text-lg italic text-slate-600 dark:text-slate-300">{t.whatItDoesNot.example.wrong}</p>
+              </div>
+              <div className="healit-card p-6 bg-gradient-to-br from-teal-50 to-teal-100/50 dark:from-teal-950/30 dark:to-teal-900/20 border-teal-200 dark:border-teal-800/30">
+                <div className="flex items-center gap-3 mb-3">
+                  <CheckCircle className="w-6 h-6 text-teal-500" />
+                  <span className="font-bold text-teal-600 dark:text-teal-400">{language === 'he' ? 'הוא אומר:' : 'It says:'}</span>
+                </div>
+                <p className="text-lg italic text-slate-600 dark:text-slate-300">{t.whatItDoesNot.example.right}</p>
+              </div>
+            </div>
+
+            <div className="healit-card p-8 text-center healit-glow">
+              <p className="text-lg text-slate-700 dark:text-slate-200 leading-relaxed">
+                {t.whatItDoesNot.conclusion}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why It Works */}
+      <section className="py-24 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 text-slate-800 dark:text-white">
+                {t.whyItWorks.title}
+              </h2>
+              <p className="text-lg text-slate-500 dark:text-slate-400">
+                {t.whyItWorks.subtitle}
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="healit-card p-8">
+                <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">
+                  {t.whyItWorks.description}
+                </p>
+                <p className="text-lg text-rose-600 dark:text-rose-400 font-medium">
+                  {t.whyItWorks.problem}
+                </p>
+              </div>
+
+              <div className="healit-card p-8 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-amber-200 dark:border-amber-800/30">
+                <div className="flex items-center gap-4 mb-4">
+                  <AlertTriangle className="w-8 h-8 text-amber-500" />
+                  <p className="text-xl font-bold text-slate-800 dark:text-white">
+                    {t.whyItWorks.highlight}
+                  </p>
+                </div>
+              </div>
+
+              <div className="healit-card p-8 healit-glow">
+                <div className="flex items-center gap-4">
+                  <Lightbulb className="w-8 h-8 text-teal-500 shrink-0" />
+                  <p className="text-xl text-slate-700 dark:text-slate-200">
+                    {t.whyItWorks.solution}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ADHD Section */}
+      <section className="py-24 bg-gradient-to-b from-purple-50/50 to-white dark:from-purple-950/20 dark:to-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-800 dark:text-white">
+                {t.adhdSection.title}
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+                {t.adhdSection.intro}
+              </p>
+            </div>
+
+            <div className="healit-card p-8 mb-12">
+              <h3 className="text-lg font-bold mb-6 text-center text-slate-700 dark:text-slate-200">
+                {language === 'he' ? 'ה-ADHD מתרסק על:' : 'ADHD crashes on:'}
+              </h3>
+              <div className="flex flex-wrap justify-center gap-3">
+                {t.adhdSection.problems.map((problem, index) => (
+                  <span key={index} className="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium">
+                    {problem}
+                  </span>
+                ))}
+              </div>
+              <p className="text-center mt-6 text-slate-500 dark:text-slate-400 italic">
+                {t.adhdSection.insight}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {t.adhdSection.solutions.map((solution, index) => (
+                <div key={index} className="healit-card p-6 group">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mb-5 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                    <solution.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3 text-slate-800 dark:text-white">
+                    {solution.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {step.description}
+                  <p className="text-slate-600 dark:text-slate-400">
+                    {solution.description}
                   </p>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Connection Section */}
+      <section className="py-24 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-slate-800 dark:text-white">
+              {t.connection.title}
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {t.connection.cards.map((card, index) => (
+                <div key={index} className="healit-card p-8 text-center">
+                  <p className="text-lg font-medium text-slate-500 dark:text-slate-400 mb-2">{card.context}</p>
+                  <p className="text-2xl font-bold text-slate-800 dark:text-white">{card.impact}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="healit-card p-8 mb-8">
+              <p className="text-lg text-slate-600 dark:text-slate-300 mb-6 text-center">
+                {t.connection.insight}
+              </p>
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                {t.connection.misconceptions.map((misconception, index) => (
+                  <span key={index} className="px-4 py-2 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm font-medium line-through decoration-2">
+                    {misconception}
+                  </span>
+                ))}
+              </div>
+              <p className="text-lg font-medium text-center text-teal-600 dark:text-teal-400">
+                {t.connection.truth}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom Line */}
+      <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-slate-800 dark:text-white">
+              {t.bottomLine.title}
+            </h2>
+
+            <div className="space-y-4 mb-12">
+              {t.bottomLine.points.map((point, index) => (
+                <div key={index} className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm max-w-2xl mx-auto">
+                  <CircleDot className="w-5 h-5 text-teal-500 shrink-0" />
+                  <p className="text-lg text-slate-700 dark:text-slate-200 text-start">{point}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="healit-card p-10 healit-glow">
+              <p className="text-2xl md:text-3xl font-bold healit-gradient-text">
+                {t.bottomLine.tagline}
+              </p>
             </div>
           </div>
         </div>
@@ -433,22 +692,9 @@ export default function HealIT() {
               <Heart className="w-10 h-10 text-white" />
             </div>
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-white">
               {t.cta2.title}
             </h2>
-
-            <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-              {t.cta2.subtitle}
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-3 mb-10">
-              {t.cta2.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
-                  <CheckCircle className="w-4 h-4" />
-                  {feature}
-                </div>
-              ))}
-            </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <Link to="/signup">
