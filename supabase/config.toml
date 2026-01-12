@@ -1,1 +1,10 @@
 project_id = "jixnugifefmpropxjncb"
+
+[functions.process-reminders]
+verify_jwt = false
+
+[functions.healit-chat]
+verify_jwt = false
+
+[functions.send-reminder-email]
+verify_jwt = false
