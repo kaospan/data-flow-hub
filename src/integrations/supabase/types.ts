@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      assistant_notes: {
+        Row: {
+          citations_json: Json | null
+          content: string
+          created_at: string
+          id: string
+          note_type: Database["public"]["Enums"]["note_type"]
+          organization_id: string
+          patient_id: string | null
+        }
+        Insert: {
+          citations_json?: Json | null
+          content: string
+          created_at?: string
+          id?: string
+          note_type: Database["public"]["Enums"]["note_type"]
+          organization_id: string
+          patient_id?: string | null
+        }
+        Update: {
+          citations_json?: Json | null
+          content?: string
+          created_at?: string
+          id?: string
+          note_type?: Database["public"]["Enums"]["note_type"]
+          organization_id?: string
+          patient_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_notes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistant_notes_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          action: string
+          after_state: Json | null
+          before_state: Json | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          metadata: Json | null
+          organization_id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_runs: {
         Row: {
           automation_id: string
@@ -125,6 +224,111 @@ export type Database = {
           },
         ]
       }
+      escalations: {
+        Row: {
+          created_at: string
+          followup_item_id: string
+          id: string
+          level: Database["public"]["Enums"]["escalation_level"]
+          organization_id: string
+          resolved_at: string | null
+          status: string
+          target_role: Database["public"]["Enums"]["owner_role"]
+          trigger_at: string
+          triggered_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          followup_item_id: string
+          id?: string
+          level?: Database["public"]["Enums"]["escalation_level"]
+          organization_id: string
+          resolved_at?: string | null
+          status?: string
+          target_role?: Database["public"]["Enums"]["owner_role"]
+          trigger_at: string
+          triggered_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          followup_item_id?: string
+          id?: string
+          level?: Database["public"]["Enums"]["escalation_level"]
+          organization_id?: string
+          resolved_at?: string | null
+          status?: string
+          target_role?: Database["public"]["Enums"]["owner_role"]
+          trigger_at?: string
+          triggered_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escalations_followup_item_id_fkey"
+            columns: ["followup_item_id"]
+            isOneToOne: false
+            referencedRelation: "followup_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "escalations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          id: string
+          occurred_at: string
+          organization_id: string
+          patient_id: string
+          payload_json: Json | null
+          processed: boolean
+          source: string
+          type: Database["public"]["Enums"]["event_type"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          organization_id: string
+          patient_id: string
+          payload_json?: Json | null
+          processed?: boolean
+          source?: string
+          type: Database["public"]["Enums"]["event_type"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          organization_id?: string
+          patient_id?: string
+          payload_json?: Json | null
+          processed?: boolean
+          source?: string
+          type?: Database["public"]["Enums"]["event_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       files: {
         Row: {
           created_at: string
@@ -194,6 +398,92 @@ export type Database = {
           },
         ]
       }
+      followup_items: {
+        Row: {
+          assigned_to: string | null
+          category: Database["public"]["Enums"]["followup_category"]
+          closure_reason: string | null
+          created_at: string
+          created_by: string
+          description: string
+          due_at: string
+          event_id: string | null
+          id: string
+          metadata: Json | null
+          organization_id: string
+          owner_role: Database["public"]["Enums"]["owner_role"]
+          patient_id: string
+          priority: Database["public"]["Enums"]["priority_level"]
+          status: Database["public"]["Enums"]["followup_status"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          category: Database["public"]["Enums"]["followup_category"]
+          closure_reason?: string | null
+          created_at?: string
+          created_by?: string
+          description: string
+          due_at: string
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          owner_role?: Database["public"]["Enums"]["owner_role"]
+          patient_id: string
+          priority?: Database["public"]["Enums"]["priority_level"]
+          status?: Database["public"]["Enums"]["followup_status"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: Database["public"]["Enums"]["followup_category"]
+          closure_reason?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          due_at?: string
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          owner_role?: Database["public"]["Enums"]["owner_role"]
+          patient_id?: string
+          priority?: Database["public"]["Enums"]["priority_level"]
+          status?: Database["public"]["Enums"]["followup_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "followup_items_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followup_items_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followup_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followup_items_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string
@@ -217,6 +507,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      patients: {
+        Row: {
+          consent_flags: Json | null
+          contact_preferences: Json | null
+          created_at: string
+          email: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          organization_id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          consent_flags?: Json | null
+          contact_preferences?: Json | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          organization_id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          consent_flags?: Json | null
+          contact_preferences?: Json | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          organization_id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patients_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -246,6 +583,113 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminders: {
+        Row: {
+          channel: Database["public"]["Enums"]["reminder_channel"]
+          created_at: string
+          error_message: string | null
+          followup_item_id: string
+          id: string
+          message_content: string | null
+          organization_id: string
+          recipient_email: string | null
+          recipient_phone: string | null
+          scheduled_at: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["reminder_status"]
+        }
+        Insert: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          created_at?: string
+          error_message?: string | null
+          followup_item_id: string
+          id?: string
+          message_content?: string | null
+          organization_id: string
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          scheduled_at: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["reminder_status"]
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          created_at?: string
+          error_message?: string | null
+          followup_item_id?: string
+          id?: string
+          message_content?: string | null
+          organization_id?: string
+          recipient_email?: string | null
+          recipient_phone?: string | null
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["reminder_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_followup_item_id_fkey"
+            columns: ["followup_item_id"]
+            isOneToOne: false
+            referencedRelation: "followup_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reminders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sla_policies: {
+        Row: {
+          condition_json: Json | null
+          created_at: string
+          due_in_days: number
+          escalation_schedule_json: Json | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          is_active: boolean
+          organization_id: string
+          reminder_schedule_json: Json | null
+          updated_at: string
+        }
+        Insert: {
+          condition_json?: Json | null
+          created_at?: string
+          due_in_days?: number
+          escalation_schedule_json?: Json | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          is_active?: boolean
+          organization_id: string
+          reminder_schedule_json?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          condition_json?: Json | null
+          created_at?: string
+          due_in_days?: number
+          escalation_schedule_json?: Json | null
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          is_active?: boolean
+          organization_id?: string
+          reminder_schedule_json?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sla_policies_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -401,6 +845,16 @@ export type Database = {
         Args: { _limit_type: string; _organization_id: string }
         Returns: string
       }
+      get_slip_check_summary: {
+        Args: { org_id: string }
+        Returns: {
+          high_priority_overdue: number
+          open_count: number
+          overdue_count: number
+          referrals_without_appointments: number
+          unassigned_count: number
+        }[]
+      }
       get_user_organization_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -421,6 +875,26 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor" | "viewer"
+      escalation_level: "1" | "2" | "3"
+      event_type:
+        | "referral"
+        | "lab_result"
+        | "discharge"
+        | "visit_note"
+        | "message"
+        | "appointment"
+      followup_category:
+        | "schedule_appointment"
+        | "repeat_test"
+        | "review_result"
+        | "medication_check"
+        | "admin_other"
+      followup_status: "open" | "in_progress" | "done" | "dismissed"
+      note_type: "slip_check" | "weekly_summary" | "intake_summary"
+      owner_role: "patient" | "staff" | "clinician"
+      priority_level: "low" | "medium" | "high"
+      reminder_channel: "email" | "sms" | "whatsapp" | "push" | "in_app"
+      reminder_status: "queued" | "sent" | "delivered" | "failed" | "canceled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -549,6 +1023,28 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor", "viewer"],
+      escalation_level: ["1", "2", "3"],
+      event_type: [
+        "referral",
+        "lab_result",
+        "discharge",
+        "visit_note",
+        "message",
+        "appointment",
+      ],
+      followup_category: [
+        "schedule_appointment",
+        "repeat_test",
+        "review_result",
+        "medication_check",
+        "admin_other",
+      ],
+      followup_status: ["open", "in_progress", "done", "dismissed"],
+      note_type: ["slip_check", "weekly_summary", "intake_summary"],
+      owner_role: ["patient", "staff", "clinician"],
+      priority_level: ["low", "medium", "high"],
+      reminder_channel: ["email", "sms", "whatsapp", "push", "in_app"],
+      reminder_status: ["queued", "sent", "delivered", "failed", "canceled"],
     },
   },
 } as const
