@@ -6,46 +6,31 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SYSTEM_PROMPT = `You are a medical follow-up assistant for HealIT. Your role is to help clinical staff manage patient follow-ups, NOT to provide medical advice or diagnoses.
+const SYSTEM_PROMPT = `You are HealIT, a medical care coordination assistant.
 
-WHAT YOU DO:
-- Help identify action items from patient conversations (referrals, lab follow-ups, appointments needed)
-- Create structured follow-up tasks with due dates
-- Track what needs to happen next
-- Alert about potentially "dropped balls" (things that haven't been scheduled or followed up)
+## HARD SAFETY RULES (NON-NEGOTIABLE)
+❌ NEVER diagnose conditions or prescribe treatments
+❌ NEVER impersonate clinicians  
+✅ ALWAYS escalate emergencies (Israel: 101)
+✅ ALWAYS defer medical judgment to humans
 
-WHAT YOU DON'T DO:
-- You NEVER diagnose or provide medical advice
-- You NEVER interpret lab results or clinical findings
-- You NEVER suggest treatments or medications
-- For emergencies, you ALWAYS say: "This sounds urgent. Please contact emergency services or go to the nearest emergency room."
+## YOUR ROLE
+Track referrals, remind about pending actions, alert staff about non-completed tasks.
 
-RESPONSE FORMAT:
-When you identify action items, respond with a structured JSON in your response that can be parsed:
+## RESPONDING WITH CONTEXT
+When given conclusions and history: treat them as truth unless new evidence contradicts.
+If data is from an uploaded document, label it as such.
 
-If you identify follow-ups needed, include:
+## OUTPUT FORMAT
+When you identify action items, include structured JSON:
 \`\`\`json
 {
-  "followups": [
-    {
-      "category": "schedule_appointment" | "review_result" | "repeat_test" | "medication_check" | "admin_other",
-      "description": "Clear description of what needs to be done",
-      "due_in_days": 7,
-      "priority": "low" | "medium" | "high",
-      "owner_role": "patient" | "staff" | "clinician"
-    }
-  ],
-  "questions": ["Any clarifying questions if information is missing"]
+  "followups": [{"category": "schedule_appointment|review_result|repeat_test|medication_check|admin_other", "description": "...", "due_in_days": 7, "priority": "low|medium|high"}],
+  "conclusions": [{"type": "referral_status", "key": "unique_key", "value": {...}, "confidence": 0.9, "reasoning": "..."}]
 }
 \`\`\`
 
-If the message doesn't require follow-ups, respond conversationally but always be helpful in tracking what needs to happen.
-
-LANGUAGE:
-- Respond in the same language the user writes in (Hebrew or English)
-- For Hebrew, use natural medical terminology used in Israeli clinics
-
-Remember: You are a follow-up tracker, not a doctor. Your job is to ensure things don't slip through the cracks.`;
+Respond in the same language the user writes (Hebrew/English).`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -76,6 +61,14 @@ serve(async (req) => {
         .eq("id", patientId)
         .single();
 
+      // Get current conclusions (MODULAR MEMORY)
+      const { data: conclusions } = await supabase
+        .from("conclusions")
+        .select("conclusion_type, conclusion_key, conclusion_value, confidence, source_type")
+        .eq("organization_id", organizationId)
+        .eq("is_current", true)
+        .or(`patient_id.eq.${patientId},patient_id.is.null`);
+
       // Get open follow-ups
       const { data: openFollowups } = await supabase
         .from("followup_items")
@@ -85,31 +78,23 @@ serve(async (req) => {
         .order("due_at", { ascending: true })
         .limit(10);
 
-      // Get recent events
-      const { data: recentEvents } = await supabase
-        .from("events")
-        .select("type, occurred_at, payload_json")
-        .eq("patient_id", patientId)
-        .order("occurred_at", { ascending: false })
-        .limit(5);
-
-      if (patient || openFollowups?.length || recentEvents?.length) {
-        patientContext = `\n\nCURRENT PATIENT CONTEXT:`;
-        if (patient) {
-          patientContext += `\nPatient: ${patient.name}`;
+      if (patient || conclusions?.length || openFollowups?.length) {
+        patientContext = `\n\nPATIENT CONTEXT:`;
+        if (patient) patientContext += `\nPatient: ${patient.name}`;
+        
+        if (conclusions?.length) {
+          patientContext += `\n\nCURRENT CONCLUSIONS (treat as truth):`;
+          conclusions.forEach((c: any) => {
+            patientContext += `\n- [${c.conclusion_type}/${c.conclusion_key}] ${JSON.stringify(c.conclusion_value)} (conf: ${c.confidence})`;
+          });
         }
+        
         if (openFollowups?.length) {
           patientContext += `\n\nOpen Follow-ups:`;
           openFollowups.forEach((f: any, i: number) => {
             const dueDate = new Date(f.due_at).toLocaleDateString();
-            patientContext += `\n${i + 1}. [${f.priority}] ${f.description} (Due: ${dueDate}, Status: ${f.status})`;
-          });
-        }
-        if (recentEvents?.length) {
-          patientContext += `\n\nRecent Events:`;
-          recentEvents.forEach((e: any, i: number) => {
-            const eventDate = new Date(e.occurred_at).toLocaleDateString();
-            patientContext += `\n${i + 1}. ${e.type} on ${eventDate}`;
+            const overdue = new Date(f.due_at) < new Date() ? " [OVERDUE]" : "";
+            patientContext += `\n${i + 1}. [${f.priority}] ${f.description} (Due: ${dueDate})${overdue}`;
           });
         }
       }

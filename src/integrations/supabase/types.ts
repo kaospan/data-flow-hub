@@ -224,6 +224,156 @@ export type Database = {
           },
         ]
       }
+      conclusions: {
+        Row: {
+          change_reason: string | null
+          changed_by: string | null
+          conclusion_key: string
+          conclusion_type: string
+          conclusion_value: Json
+          confidence: number | null
+          created_at: string
+          id: string
+          is_current: boolean | null
+          organization_id: string
+          patient_id: string | null
+          previous_value: Json | null
+          reasoning: string | null
+          source_details: Json | null
+          source_id: string | null
+          source_type: string
+          superseded_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          change_reason?: string | null
+          changed_by?: string | null
+          conclusion_key: string
+          conclusion_type: string
+          conclusion_value: Json
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          is_current?: boolean | null
+          organization_id: string
+          patient_id?: string | null
+          previous_value?: Json | null
+          reasoning?: string | null
+          source_details?: Json | null
+          source_id?: string | null
+          source_type: string
+          superseded_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          change_reason?: string | null
+          changed_by?: string | null
+          conclusion_key?: string
+          conclusion_type?: string
+          conclusion_value?: Json
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          is_current?: boolean | null
+          organization_id?: string
+          patient_id?: string | null
+          previous_value?: Json | null
+          reasoning?: string | null
+          source_details?: Json | null
+          source_id?: string | null
+          source_type?: string
+          superseded_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conclusions_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conclusions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conclusions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conclusions_superseded_by_fkey"
+            columns: ["superseded_by"]
+            isOneToOne: false
+            referencedRelation: "conclusions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversation_history: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          organization_id: string
+          patient_id: string | null
+          role: string
+          thread_id: string
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          patient_id?: string | null
+          role: string
+          thread_id?: string
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          patient_id?: string | null
+          role?: string
+          thread_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_history_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       escalations: {
         Row: {
           created_at: string
@@ -845,6 +995,18 @@ export type Database = {
         Args: { _limit_type: string; _organization_id: string }
         Returns: string
       }
+      get_patient_conclusions: {
+        Args: { p_organization_id: string; p_patient_id: string }
+        Returns: {
+          conclusion_key: string
+          conclusion_type: string
+          conclusion_value: Json
+          confidence: number
+          reasoning: string
+          source_type: string
+          updated_at: string
+        }[]
+      }
       get_slip_check_summary: {
         Args: { org_id: string }
         Returns: {
@@ -872,6 +1034,22 @@ export type Database = {
         Returns: undefined
       }
       same_organization: { Args: { _user_id: string }; Returns: boolean }
+      update_conclusion: {
+        Args: {
+          p_change_reason: string
+          p_conclusion_key: string
+          p_conclusion_type: string
+          p_confidence: number
+          p_new_value: Json
+          p_organization_id: string
+          p_patient_id: string
+          p_reasoning: string
+          p_source_details: Json
+          p_source_id: string
+          p_source_type: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "editor" | "viewer"
