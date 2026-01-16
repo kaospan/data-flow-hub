@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
@@ -94,6 +94,14 @@ export function useSources() {
     }
   }, [organization?.id]);
 
+  // Polling ref to track interval
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check if any files are in non-terminal state (need polling)
+  const hasProcessingFiles = files.some(f => 
+    f.status === 'uploaded' || f.status === 'processing'
+  );
+
   useEffect(() => {
     if (!organization?.id) {
       setIsLoading(false);
@@ -108,7 +116,7 @@ export function useSources() {
 
     loadData();
 
-    // Realtime subscriptions
+    // Realtime subscriptions for immediate updates
     const channel = supabase
       .channel('sources-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'sources' }, () => {
@@ -123,6 +131,29 @@ export function useSources() {
       supabase.removeChannel(channel);
     };
   }, [organization?.id, fetchSources, fetchFiles]);
+
+  // Status polling for files in processing state (fallback for realtime)
+  useEffect(() => {
+    // Clear any existing polling
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+
+    // Start polling if there are files in non-terminal state
+    if (hasProcessingFiles && organization?.id) {
+      pollingRef.current = setInterval(() => {
+        fetchFiles();
+      }, 3000); // Poll every 3 seconds
+    }
+
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [hasProcessingFiles, organization?.id, fetchFiles]);
 
   const createSource = async (name: string, type: Source['type']) => {
     if (!organization?.id || !user?.id) {
@@ -170,6 +201,9 @@ export function useSources() {
         _counter_type: 'sources',
         _amount: 1,
       });
+
+      // Immediately refetch to ensure UI is up-to-date
+      await fetchSources();
 
       toast({
         title: 'Success',
@@ -251,6 +285,9 @@ export function useSources() {
         _amount: 1,
       });
 
+      // Immediately refetch to ensure UI is up-to-date (don't wait for realtime)
+      await fetchFiles();
+
       toast({
         title: 'Success',
         description: 'File uploaded successfully',
@@ -286,6 +323,9 @@ export function useSources() {
         });
       }
 
+      // Immediately refetch to ensure UI is up-to-date
+      await fetchSources();
+
       toast({
         title: 'Success',
         description: 'Source deleted successfully',
@@ -316,9 +356,8 @@ export function useSources() {
     uploadFile,
     deleteSource,
     getFileUrl,
-    refetch: () => {
-      fetchSources();
-      fetchFiles();
+    refetch: async () => {
+      await Promise.all([fetchSources(), fetchFiles()]);
     },
   };
 }
