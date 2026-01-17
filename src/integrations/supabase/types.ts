@@ -658,6 +658,69 @@ export type Database = {
         }
         Relationships: []
       }
+      patient_medications: {
+        Row: {
+          created_at: string
+          current_supply: number | null
+          dosage: string | null
+          id: string
+          instructions: string | null
+          is_active: boolean
+          last_refill_date: string | null
+          metadata: Json | null
+          name: string
+          organization_id: string
+          patient_id: string
+          refill_reminder_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_supply?: number | null
+          dosage?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean
+          last_refill_date?: string | null
+          metadata?: Json | null
+          name: string
+          organization_id: string
+          patient_id: string
+          refill_reminder_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_supply?: number | null
+          dosage?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean
+          last_refill_date?: string | null
+          metadata?: Json | null
+          name?: string
+          organization_id?: string
+          patient_id?: string
+          refill_reminder_days?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_medications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_medications_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       patients: {
         Row: {
           consent_flags: Json | null
@@ -796,6 +859,335 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routine_completions: {
+        Row: {
+          completed_at: string
+          completion_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          notes: string | null
+          organization_id: string
+          patient_id: string
+          reminder_id: string | null
+          routine_id: string
+          step_id: string | null
+        }
+        Insert: {
+          completed_at?: string
+          completion_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          organization_id: string
+          patient_id: string
+          reminder_id?: string | null
+          routine_id: string
+          step_id?: string | null
+        }
+        Update: {
+          completed_at?: string
+          completion_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          organization_id?: string
+          patient_id?: string
+          reminder_id?: string | null
+          routine_id?: string
+          step_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_completions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_completions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_completions_reminder_id_fkey"
+            columns: ["reminder_id"]
+            isOneToOne: false
+            referencedRelation: "routine_reminders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_completions_routine_id_fkey"
+            columns: ["routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_completions_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "routine_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routine_reminders: {
+        Row: {
+          created_at: string
+          escalation_level: number
+          id: string
+          metadata: Json | null
+          organization_id: string
+          patient_id: string
+          responded_at: string | null
+          response_type: string | null
+          routine_id: string
+          schedule_rule_id: string | null
+          scheduled_at: string
+          skip_reason: string | null
+          snooze_until: string | null
+          status: Database["public"]["Enums"]["routine_reminder_status"]
+          step_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          escalation_level?: number
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          patient_id: string
+          responded_at?: string | null
+          response_type?: string | null
+          routine_id: string
+          schedule_rule_id?: string | null
+          scheduled_at: string
+          skip_reason?: string | null
+          snooze_until?: string | null
+          status?: Database["public"]["Enums"]["routine_reminder_status"]
+          step_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          escalation_level?: number
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          patient_id?: string
+          responded_at?: string | null
+          response_type?: string | null
+          routine_id?: string
+          schedule_rule_id?: string | null
+          scheduled_at?: string
+          skip_reason?: string | null
+          snooze_until?: string | null
+          status?: Database["public"]["Enums"]["routine_reminder_status"]
+          step_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_reminders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_reminders_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_reminders_routine_id_fkey"
+            columns: ["routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_reminders_schedule_rule_id_fkey"
+            columns: ["schedule_rule_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_reminders_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "routine_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routine_steps: {
+        Row: {
+          created_at: string
+          estimated_minutes: number | null
+          id: string
+          is_optional: boolean | null
+          label: string
+          routine_id: string
+          step_order: number
+          trigger_delay_minutes: number | null
+          triggers_step_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          estimated_minutes?: number | null
+          id?: string
+          is_optional?: boolean | null
+          label: string
+          routine_id: string
+          step_order?: number
+          trigger_delay_minutes?: number | null
+          triggers_step_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          estimated_minutes?: number | null
+          id?: string
+          is_optional?: boolean | null
+          label?: string
+          routine_id?: string
+          step_order?: number
+          trigger_delay_minutes?: number | null
+          triggers_step_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_steps_routine_id_fkey"
+            columns: ["routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_steps_triggers_step_id_fkey"
+            columns: ["triggers_step_id"]
+            isOneToOne: false
+            referencedRelation: "routine_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routines: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          medication_info: Json | null
+          name: string
+          organization_id: string
+          patient_id: string
+          priority: Database["public"]["Enums"]["routine_priority"]
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          timezone: string | null
+          type: Database["public"]["Enums"]["routine_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          medication_info?: Json | null
+          name: string
+          organization_id: string
+          patient_id: string
+          priority?: Database["public"]["Enums"]["routine_priority"]
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          timezone?: string | null
+          type?: Database["public"]["Enums"]["routine_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          medication_info?: Json | null
+          name?: string
+          organization_id?: string
+          patient_id?: string
+          priority?: Database["public"]["Enums"]["routine_priority"]
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          timezone?: string | null
+          type?: Database["public"]["Enums"]["routine_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routines_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routines_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_rules: {
+        Row: {
+          created_at: string
+          days_of_week: Database["public"]["Enums"]["day_of_week"][]
+          id: string
+          is_active: boolean
+          routine_id: string
+          time_of_day: string
+          trigger_description: string | null
+          trigger_type: string
+        }
+        Insert: {
+          created_at?: string
+          days_of_week?: Database["public"]["Enums"]["day_of_week"][]
+          id?: string
+          is_active?: boolean
+          routine_id: string
+          time_of_day: string
+          trigger_description?: string | null
+          trigger_type?: string
+        }
+        Update: {
+          created_at?: string
+          days_of_week?: Database["public"]["Enums"]["day_of_week"][]
+          id?: string
+          is_active?: boolean
+          routine_id?: string
+          time_of_day?: string
+          trigger_description?: string | null
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_rules_routine_id_fkey"
+            columns: ["routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
             referencedColumns: ["id"]
           },
         ]
@@ -1007,6 +1399,20 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_patient_today_routines: {
+        Args: { p_organization_id: string; p_patient_id: string }
+        Returns: {
+          escalation_level: number
+          priority: Database["public"]["Enums"]["routine_priority"]
+          reminder_id: string
+          reminder_status: Database["public"]["Enums"]["routine_reminder_status"]
+          routine_id: string
+          routine_name: string
+          routine_type: Database["public"]["Enums"]["routine_type"]
+          scheduled_at: string
+          scheduled_time: string
+        }[]
+      }
       get_slip_check_summary: {
         Args: { org_id: string }
         Returns: {
@@ -1053,6 +1459,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor" | "viewer"
+      day_of_week:
+        | "sunday"
+        | "monday"
+        | "tuesday"
+        | "wednesday"
+        | "thursday"
+        | "friday"
+        | "saturday"
       escalation_level: "1" | "2" | "3"
       event_type:
         | "referral"
@@ -1073,6 +1487,22 @@ export type Database = {
       priority_level: "low" | "medium" | "high"
       reminder_channel: "email" | "sms" | "whatsapp" | "push" | "in_app"
       reminder_status: "queued" | "sent" | "delivered" | "failed" | "canceled"
+      routine_priority: "critical" | "important" | "flexible"
+      routine_reminder_status:
+        | "pending"
+        | "sent"
+        | "confirmed"
+        | "snoozed"
+        | "skipped"
+        | "escalated"
+        | "expired"
+      routine_type:
+        | "medication"
+        | "pickup"
+        | "hygiene"
+        | "chore"
+        | "gate"
+        | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1201,6 +1631,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor", "viewer"],
+      day_of_week: [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ],
       escalation_level: ["1", "2", "3"],
       event_type: [
         "referral",
@@ -1223,6 +1662,24 @@ export const Constants = {
       priority_level: ["low", "medium", "high"],
       reminder_channel: ["email", "sms", "whatsapp", "push", "in_app"],
       reminder_status: ["queued", "sent", "delivered", "failed", "canceled"],
+      routine_priority: ["critical", "important", "flexible"],
+      routine_reminder_status: [
+        "pending",
+        "sent",
+        "confirmed",
+        "snoozed",
+        "skipped",
+        "escalated",
+        "expired",
+      ],
+      routine_type: [
+        "medication",
+        "pickup",
+        "hygiene",
+        "chore",
+        "gate",
+        "custom",
+      ],
     },
   },
 } as const
