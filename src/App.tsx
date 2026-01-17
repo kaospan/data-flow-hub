@@ -26,6 +26,7 @@ import Docs from "./pages/Docs";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import HealIT from "./pages/HealIT";
+import HealITApp from "./pages/HealITApp";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/healit" element={<HealIT />} />
+                <Route path="/healit/app" element={<HealITApp />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AccessibilityWidget />
