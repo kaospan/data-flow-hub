@@ -634,6 +634,63 @@ export type Database = {
           },
         ]
       }
+      medical_items: {
+        Row: {
+          created_at: string
+          extracted_text: string | null
+          id: string
+          kind: string
+          metadata: Json | null
+          organization_id: string
+          patient_id: string
+          storage_url: string | null
+          tags: Json | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          extracted_text?: string | null
+          id?: string
+          kind: string
+          metadata?: Json | null
+          organization_id: string
+          patient_id: string
+          storage_url?: string | null
+          tags?: Json | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          extracted_text?: string | null
+          id?: string
+          kind?: string
+          metadata?: Json | null
+          organization_id?: string
+          patient_id?: string
+          storage_url?: string | null
+          tags?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medical_items_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string
@@ -727,11 +784,14 @@ export type Database = {
           contact_preferences: Json | null
           created_at: string
           email: string | null
+          home_timezone: string | null
           id: string
           metadata: Json | null
           name: string
           organization_id: string
           phone: string | null
+          travel_mode: boolean | null
+          travel_timezone: string | null
           updated_at: string
         }
         Insert: {
@@ -739,11 +799,14 @@ export type Database = {
           contact_preferences?: Json | null
           created_at?: string
           email?: string | null
+          home_timezone?: string | null
           id?: string
           metadata?: Json | null
           name: string
           organization_id: string
           phone?: string | null
+          travel_mode?: boolean | null
+          travel_timezone?: string | null
           updated_at?: string
         }
         Update: {
@@ -751,11 +814,14 @@ export type Database = {
           contact_preferences?: Json | null
           created_at?: string
           email?: string | null
+          home_timezone?: string | null
           id?: string
           metadata?: Json | null
           name?: string
           organization_id?: string
           phone?: string | null
+          travel_mode?: boolean | null
+          travel_timezone?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -941,6 +1007,48 @@ export type Database = {
           },
         ]
       }
+      routine_dependencies: {
+        Row: {
+          created_at: string
+          delay_minutes: number | null
+          from_step_id: string
+          id: string
+          next_fire_strategy: string | null
+          to_step_id: string
+        }
+        Insert: {
+          created_at?: string
+          delay_minutes?: number | null
+          from_step_id: string
+          id?: string
+          next_fire_strategy?: string | null
+          to_step_id: string
+        }
+        Update: {
+          created_at?: string
+          delay_minutes?: number | null
+          from_step_id?: string
+          id?: string
+          next_fire_strategy?: string | null
+          to_step_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_dependencies_from_step_id_fkey"
+            columns: ["from_step_id"]
+            isOneToOne: false
+            referencedRelation: "routine_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_dependencies_to_step_id_fkey"
+            columns: ["to_step_id"]
+            isOneToOne: false
+            referencedRelation: "routine_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       routine_reminders: {
         Row: {
           created_at: string
@@ -1089,10 +1197,13 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          escalation_config: Json | null
+          gate_routine_id: string | null
           id: string
           is_active: boolean
           medication_info: Json | null
           name: string
+          notify_contacts: Json | null
           organization_id: string
           patient_id: string
           priority: Database["public"]["Enums"]["routine_priority"]
@@ -1105,10 +1216,13 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          escalation_config?: Json | null
+          gate_routine_id?: string | null
           id?: string
           is_active?: boolean
           medication_info?: Json | null
           name: string
+          notify_contacts?: Json | null
           organization_id: string
           patient_id: string
           priority?: Database["public"]["Enums"]["routine_priority"]
@@ -1121,10 +1235,13 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          escalation_config?: Json | null
+          gate_routine_id?: string | null
           id?: string
           is_active?: boolean
           medication_info?: Json | null
           name?: string
+          notify_contacts?: Json | null
           organization_id?: string
           patient_id?: string
           priority?: Database["public"]["Enums"]["routine_priority"]
@@ -1135,6 +1252,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "routines_gate_routine_id_fkey"
+            columns: ["gate_routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "routines_organization_id_fkey"
             columns: ["organization_id"]
@@ -1153,7 +1277,9 @@ export type Database = {
       }
       schedule_rules: {
         Row: {
+          buffer_minutes: number | null
           created_at: string
+          day_type: string | null
           days_of_week: Database["public"]["Enums"]["day_of_week"][]
           id: string
           is_active: boolean
@@ -1163,7 +1289,9 @@ export type Database = {
           trigger_type: string
         }
         Insert: {
+          buffer_minutes?: number | null
           created_at?: string
+          day_type?: string | null
           days_of_week?: Database["public"]["Enums"]["day_of_week"][]
           id?: string
           is_active?: boolean
@@ -1173,7 +1301,9 @@ export type Database = {
           trigger_type?: string
         }
         Update: {
+          buffer_minutes?: number | null
           created_at?: string
+          day_type?: string | null
           days_of_week?: Database["public"]["Enums"]["day_of_week"][]
           id?: string
           is_active?: boolean
@@ -1439,7 +1569,53 @@ export type Database = {
         }
         Returns: undefined
       }
+      is_gate_cleared: {
+        Args: { p_gate_routine_id: string; p_patient_id: string }
+        Returns: boolean
+      }
+      log_audit_entry: {
+        Args: {
+          p_action: string
+          p_after_state?: Json
+          p_before_state?: Json
+          p_entity_id: string
+          p_entity_type: string
+          p_metadata?: Json
+          p_organization_id: string
+        }
+        Returns: string
+      }
       same_organization: { Args: { _user_id: string }; Returns: boolean }
+      search_medical_items: {
+        Args: {
+          p_from_date?: string
+          p_kind?: string
+          p_organization_id: string
+          p_patient_id: string
+          p_search_text?: string
+          p_tags?: string[]
+          p_to_date?: string
+        }
+        Returns: {
+          created_at: string
+          extracted_text: string | null
+          id: string
+          kind: string
+          metadata: Json | null
+          organization_id: string
+          patient_id: string
+          storage_url: string | null
+          tags: Json | null
+          title: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "medical_items"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       update_conclusion: {
         Args: {
           p_change_reason: string
